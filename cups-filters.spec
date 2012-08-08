@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.20
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -107,6 +107,7 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %config(noreplace) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
+# Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
@@ -130,6 +131,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 08 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.20-4
+- rebuild
+
 * Thu Aug 02 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.20-3
 - commented multiple licensing breakdown (#832130)
 - verbose build output
