@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.20
-Release: 4%{?dist}
+Version: 1.0.22
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,8 +23,9 @@ Url:    http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_a
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
 BuildRequires: cups-devel
-BuildRequires: poppler-utils 
-BuildRequires: poppler-devel poppler-cpp-devel
+# old pdftopdf filter
+BuildRequires: poppler-utils poppler-devel poppler-cpp-devel
+BuildRequires: qpdf-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
@@ -38,6 +39,7 @@ BuildRequires: lcms2-devel
 # Make sure we get postscriptdriver tags.
 BuildRequires: python-cups
 
+# autogen.sh
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libtool
@@ -75,6 +77,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %setup -q
 
 %build
+# work-around Rpath
 ./autogen.sh
 
 # --with-pdftops=pdftops - use Poppler instead of Ghostscript (see README)
@@ -131,6 +134,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 21 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.22-1
+- 1.0.22: new pdftopdf (uses qpdf instead of poppler)
+
 * Wed Aug 08 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.20-4
 - rebuild
 
