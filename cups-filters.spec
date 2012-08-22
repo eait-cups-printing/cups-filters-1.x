@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.22
+Version: 1.0.23
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -23,9 +23,12 @@ Url:    http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_a
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
 BuildRequires: cups-devel
-# old pdftopdf filter
-BuildRequires: poppler-utils poppler-devel poppler-cpp-devel
+# pdftopdf
 BuildRequires: qpdf-devel
+# pdftops
+BuildRequires: poppler-utils
+# pdftoijs, pdftoopvp, pdftoraster
+BuildRequires: poppler-devel poppler-cpp-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
@@ -134,6 +137,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 22 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.23-1
+- 1.0.23: old pdftopdf removed
+
 * Tue Aug 21 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.22-1
 - 1.0.22: new pdftopdf (uses qpdf instead of poppler)
 
