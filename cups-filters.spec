@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.23
+Version: 1.0.24
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -137,6 +137,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Sep 07 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.24-1
+- 1.0.24
+
 * Wed Aug 22 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.23-1
 - 1.0.23: old pdftopdf removed
 
