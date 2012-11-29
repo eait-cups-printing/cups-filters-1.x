@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.24
+Version: 1.0.25
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -12,8 +12,9 @@ Release: 1%{?dist}
 #         backends: parallel, serial
 # GPLv2+:  filters: textonly, texttops, imagetops
 # GPLv3:   filters: bannertopdf
+# GPLv3+:  filters: urftopdf
 # MIT:     filters: pdftoijs, pdftoopvp, pdftopdf, pdftoraster
-License: GPLv2 and GPLv2+ and GPLv3 and MIT
+License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and MIT
 
 Group:   System Environment/Base
 
@@ -137,6 +138,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Nov 29 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.25-1
+- 1.0.25
+
 * Fri Sep 07 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.24-1
 - 1.0.24
 
