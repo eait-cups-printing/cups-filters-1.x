@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.25
+Version: 1.0.28
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -13,13 +13,16 @@ Release: 1%{?dist}
 # GPLv2+:  filters: textonly, texttops, imagetops
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
+# LGPLv2+:   utils: cups-browsed
 # MIT:     filters: pdftoijs, pdftoopvp, pdftopdf, pdftoraster
-License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and MIT
+License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Group:   System Environment/Base
+Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
+Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+Source1: cups-browsed.service
 
-Source: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-Url:    http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
+Patch0: cups-filters-1.0.28-initd.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -39,6 +42,9 @@ BuildRequires: ghostscript-devel
 BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
 BuildRequires: lcms2-devel
+# cups-browsed
+BuildRequires: avahi-devel
+BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python-cups
@@ -50,6 +56,11 @@ BuildRequires: libtool
 
 Requires: cups-filesystem
 Requires: poppler-utils
+
+# cups-browsed
+Requires(post): systemd
+Requires(preun): systemd
+Requires(postun): systemd
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -80,14 +91,19 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
+# don't create symlinks in /etc/rcx.d/ when --with-rcdir=no
+%patch0 -p1 -b .initd
+
 %build
 # work-around Rpath
 ./autogen.sh
 
 # --with-pdftops=pdftops - use Poppler instead of Ghostscript (see README)
+# --with-rcdir=no - don't install SysV init script
 %configure --disable-static \
            --disable-silent-rules \
-           --with-pdftops=pdftops
+           --with-pdftops=pdftops \
+           --with-rcdir=no
 
 make %{?_smp_mflags}
 
@@ -105,9 +121,23 @@ rm -f %{buildroot}%{_libdir}/lib*.la
 # Not sure what is this good for.
 rm -f %{buildroot}%{_bindir}/ttfread
 
+# systemd unit file
+mkdir -p %{buildroot}%{_unitdir}
+install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
+
+%post
+%systemd_post cups-browsed.service
+
+%preun
+%systemd_preun cups-browsed.service
+
+%postun
+%systemd_postun_with_restart cups-browsed.service 
+
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
+
 
 %files
 %doc __doc/README __doc/AUTHORS __doc/NEWS
@@ -123,6 +153,8 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/ppd/cupsfilters
+%{_sbindir}/cups-browsed
+%{_unitdir}/cups-browsed.service
 
 %files libs
 %doc __doc/COPYING fontembed/README
@@ -138,6 +170,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jan 02 2013 Jiri Popelka <jpopelka@redhat.com> 1.0.28-1
+- 1.0.28: cups-browsed daemon and service
+
 * Thu Nov 29 2012 Jiri Popelka <jpopelka@redhat.com> 1.0.25-1
 - 1.0.25
 
