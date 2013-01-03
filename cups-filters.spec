@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.28
+Version: 1.0.29
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -21,8 +21,6 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
-
-Patch0: cups-filters-1.0.28-initd.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -90,9 +88,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-
-# don't create symlinks in /etc/rcx.d/ when --with-rcdir=no
-%patch0 -p1 -b .initd
 
 %build
 # work-around Rpath
@@ -170,6 +165,9 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jan 03 2013 Jiri Popelka <jpopelka@redhat.com> 1.0.29-1
+- 1.0.29
+
 * Wed Jan 02 2013 Jiri Popelka <jpopelka@redhat.com> 1.0.28-1
 - 1.0.28: cups-browsed daemon and service
 
