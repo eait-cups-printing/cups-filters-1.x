@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.29
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,9 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
+
+# backport upstream fix(es) for poppler-0.22.x
+Patch1: cups-filters-1.0.29-poppler_022.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -88,6 +91,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+
+%patch1 -p1 -b .poppler_022
 
 %build
 # work-around Rpath
@@ -165,6 +170,9 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %{_libdir}/libfontembed.so
 
 %changelog
+* Sat Jan 19 2013 Rex Dieter <rdieter@fedoraproject.org> 1.0.29-3
+- backport upstream buildfix for poppler-0.22.x
+
 * Fri Jan 18 2013 Adam Tkac <atkac redhat com> - 1.0.29-2
 - rebuild due to "jpeg8-ABI" feature drop
 
