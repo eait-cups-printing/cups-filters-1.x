@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.29
-Release: 4%{?dist}
+Version: 1.0.30
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,9 +21,6 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
-
-# backport upstream fix(es) for poppler-0.22.x
-Patch1: cups-filters-1.0.29-poppler_022.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -44,7 +41,7 @@ BuildRequires: freetype-devel
 BuildRequires: fontconfig-devel
 BuildRequires: lcms2-devel
 # cups-browsed
-BuildRequires: avahi-devel
+BuildRequires: avahi-devel avahi-glib-devel
 BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
@@ -92,8 +89,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-%patch1 -p1 -b .poppler_022
-
 %build
 # work-around Rpath
 ./autogen.sh
@@ -103,6 +98,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %configure --disable-static \
            --disable-silent-rules \
            --with-pdftops=pdftops \
+           --with-browseremoteprotocols=DNSSD,CUPS \
            --with-rcdir=no
 
 make %{?_smp_mflags}
@@ -141,6 +137,7 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 
 %files
 %doc __doc/README __doc/AUTHORS __doc/NEWS
+%config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
 %config(noreplace) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
@@ -170,6 +167,9 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Mar 08 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.30-1
+- 1.0.30: CUPS browsing and broadcasting in cups-browsed
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.29-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
