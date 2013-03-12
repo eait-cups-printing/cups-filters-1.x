@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.30
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -124,6 +124,27 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %post
 %systemd_post cups-browsed.service
 
+# Initial installation
+if [ $1 -eq 1 ] ; then
+    # move BrowsePoll from cupsd.conf to cups-browsed.conf
+    IN=%{_sysconfdir}/cups/cupsd.conf
+    OUT=%{_sysconfdir}/cups/cups-browsed.conf
+    keyword=BrowsePoll
+
+    if grep -iq ^$keyword "$IN"; then
+        if ! grep -iq ^$keyword "$OUT"; then
+            (cat >> "$OUT" <<EOF
+
+# Settings automatically moved from cupsd.conf by RPM package:
+EOF
+            ) || :
+            (grep -i ^$keyword "$IN" >> "$OUT") || :
+            #systemctl enable cups-browsed.service >/dev/null 2>&1 || :
+        fi
+        sed -i -e "s,^$keyword,#$keyword directive moved to cups-browsed.conf\n#$keyword,i" "$IN" || :
+    fi
+fi
+
 %preun
 %systemd_preun cups-browsed.service
 
@@ -167,6 +188,9 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar 12 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.30-2
+- move BrowsePoll from cupsd.conf to cups-browsed.conf in %%post
+
 * Fri Mar 08 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.30-1
 - 1.0.30: CUPS browsing and broadcasting in cups-browsed
 
