@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.30
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -117,10 +117,6 @@ rm -f %{buildroot}%{_libdir}/lib*.la
 # Not sure what is this good for.
 rm -f %{buildroot}%{_bindir}/ttfread
 
-# banners are shipped with cups (#919489)
-rm -rf $RPM_BUILD_ROOT%{_datadir}/cups/banners
-rm -f $RPM_BUILD_ROOT%{_datadir}/cups/data/testprint
-
 # systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
@@ -168,7 +164,7 @@ fi
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
-#%%{_datadir}/cups/banners
+%{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
 %{_datadir}/cups/drv/cupsfilters.drv
@@ -192,6 +188,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar 19 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.30-4
+- revert previous change
+
 * Wed Mar 13 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.30-3
 - don't ship banners for now (#919489)
 
