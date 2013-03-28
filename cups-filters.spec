@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.31
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -131,7 +131,7 @@ if [ $1 -eq 1 ] ; then
     OUT=%{_sysconfdir}/cups/cups-browsed.conf
     keyword=BrowsePoll
 
-    if grep -iq ^$keyword "$IN"; then
+    if [ -f "$IN" ] && grep -iq ^$keyword "$IN"; then
         if ! grep -iq ^$keyword "$OUT"; then
             (cat >> "$OUT" <<EOF
 
@@ -188,6 +188,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Mar 28 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.31-2
+- check cupsd.conf existence prior to grepping it (#928816)
+
 * Fri Mar 22 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.31-1
 - 1.0.31
 
