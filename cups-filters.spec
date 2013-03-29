@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.31
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -126,11 +126,16 @@ install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 
 # Initial installation
 if [ $1 -eq 1 ] ; then
-    # move BrowsePoll from cupsd.conf to cups-browsed.conf
     IN=%{_sysconfdir}/cups/cupsd.conf
     OUT=%{_sysconfdir}/cups/cups-browsed.conf
     keyword=BrowsePoll
 
+    # We can remove this after few releases, it's just for the introduction of cups-browsed.
+    if [ -f "$OUT" ]; then
+        echo -e "\nNOTE: This file is not part of CUPS. You need to start&enable cups-browsed service." >> "$OUT"
+    fi
+
+    # move BrowsePoll from cupsd.conf to cups-browsed.conf
     if [ -f "$IN" ] && grep -iq ^$keyword "$IN"; then
         if ! grep -iq ^$keyword "$OUT"; then
             (cat >> "$OUT" <<EOF
@@ -188,6 +193,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Mar 29 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.31-3
+- add note to cups-browsed.conf
+
 * Thu Mar 28 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.31-2
 - check cupsd.conf existence prior to grepping it (#928816)
 
