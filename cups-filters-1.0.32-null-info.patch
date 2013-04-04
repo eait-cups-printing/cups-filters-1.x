@@ -1,0 +1,14 @@
+diff -upr cups-filters-1.0.32_orig/utils/cups-browsed.c cups-filters-1.0.32_workk/utils/cups-browsed.c
+--- cups-filters-1.0.32_orig/utils/cups-browsed.c	2013-04-04 13:41:34.839126301 +0200
++++ cups-filters-1.0.32_work/utils/cups-browsed.c	2013-04-04 13:42:26.150339923 +0200
+@@ -698,7 +698,7 @@ void generate_local_queue(const char *ho
+ 	    port, remote_queue);
+ 
+     p = create_local_queue (local_queue_name, uri, remote_host,
+-			    name, type, domain);
++			    name ? name : "", type, domain);
+     free (uri);
+   }
+ 
+Only in cups-filters-1.0.32_workk/utils: .cups-browsed.c.swp
+Only in cups-filters-1.0.32_workk/utils: tags
