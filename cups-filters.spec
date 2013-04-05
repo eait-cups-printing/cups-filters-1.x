@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.32
-Release: 2%{?dist}
+Version: 1.0.33
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,7 +21,6 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
-Patch1: cups-filters-1.0.32-null-info.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -89,7 +88,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch1 -p1 -b .null-info
 
 %build
 # work-around Rpath
@@ -195,6 +193,10 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Apr 05 2013 Fridolin Pokorny <fpokorny@redhat.com> - 1.0.33-1
+- 1.0.33
+- removed cups-filters-1.0.32-null-info.patch, accepted by upstream
+
 * Thu Apr 04 2013 Fridolin Pokorny <fpokorny@redhat.com> - 1.0.32-2
 - fixed segfault when info is NULL
 
