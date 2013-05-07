@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -54,6 +54,8 @@ BuildRequires: libtool
 
 Requires: cups-filesystem
 Requires: poppler-utils
+# pstopdf
+Requires: bc
 
 # cups-browsed
 Requires(post): systemd
@@ -193,10 +195,13 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue May 07 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-2
+- pstopdf requires bc (#960315)
+
 * Thu Apr 11 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-1
 - 1.0.34
 
-* Thu Apr 05 2013 Fridolin Pokorny <fpokorny@redhat.com> - 1.0.33-1
+* Fri Apr 05 2013 Fridolin Pokorny <fpokorny@redhat.com> - 1.0.33-1
 - 1.0.33
 - removed cups-filters-1.0.32-null-info.patch, accepted by upstream
 
