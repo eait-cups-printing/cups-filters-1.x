@@ -55,7 +55,7 @@ BuildRequires: libtool
 Requires: cups-filesystem
 Requires: poppler-utils
 # pstopdf
-Requires: bc
+Requires: bc grep perl sed
 
 # cups-browsed
 Requires(post): systemd
