@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,8 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
+
+Patch1: cups-filters-pcl.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -90,6 +92,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+%patch1 -p1 -b .pcl
 
 %build
 # work-around Rpath
@@ -174,6 +177,8 @@ fi
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
+# this needs to be in the main package because of cupsfilters.drv
+%{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
@@ -195,6 +200,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed May 15 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-3
+- ship ppdc/pcl.h because of cupsfilters.drv
+
 * Tue May 07 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-2
 - pstopdf requires bc (#960315)
 

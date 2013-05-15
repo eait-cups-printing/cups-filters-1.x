@@ -1,0 +1,17 @@
+diff -up cups-filters-1.0.34/Makefile.am.pcl cups-filters-1.0.34/Makefile.am
+--- cups-filters-1.0.34/Makefile.am.pcl	2013-03-19 16:19:30.000000000 +0100
++++ cups-filters-1.0.34/Makefile.am	2013-05-15 11:57:00.068339837 +0200
+@@ -213,6 +213,13 @@ pkgdriver_DATA = \
+ 
+ EXTRA_DIST += $(pkgdriver_DATA)
+ 
++# =======
++# Definitions for drivers
++# =======
++pkgppdcdir = $(CUPS_DATADIR)/ppdc
++pkgppdc_DATA = \
++	filter/pcl.h
++
+ # =====
+ # MIMEs
+ # =====
