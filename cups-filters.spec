@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,6 +23,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 Source1: cups-browsed.service
 
 Patch1: cups-filters-pcl.patch
+Patch2: cups-filters-coverity.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -93,6 +94,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 %patch1 -p1 -b .pcl
+%patch2 -p1 -b .coverity
 
 %build
 # work-around Rpath
@@ -200,6 +202,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jun 03 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-4
+- fix resource leaks and other problems found by Coverity & Valgrind (#959682)
+
 * Wed May 15 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-3
 - ship ppdc/pcl.h because of cupsfilters.drv
 
