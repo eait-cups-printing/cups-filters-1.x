@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -58,7 +58,7 @@ BuildRequires: libtool
 Requires: cups-filesystem
 Requires: poppler-utils
 # pstopdf
-Requires: bc grep perl sed
+Requires: bc grep sed
 
 # cups-browsed
 Requires(post): systemd
@@ -202,6 +202,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 05 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-5
+- perl is actually not required by pstopdf, because the calling is in dead code
+
 * Mon Jun 03 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-4
 - fix resource leaks and other problems found by Coverity & Valgrind (#959682)
 
