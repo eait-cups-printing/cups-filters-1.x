@@ -1,6 +1,6 @@
 diff -up cups-filters-1.0.34/cupsfilters/image-tiff.c.coverity cups-filters-1.0.34/cupsfilters/image-tiff.c
 --- cups-filters-1.0.34/cupsfilters/image-tiff.c.coverity	2012-06-22 18:10:47.000000000 +0200
-+++ cups-filters-1.0.34/cupsfilters/image-tiff.c	2013-06-03 11:09:53.138129637 +0200
++++ cups-filters-1.0.34/cupsfilters/image-tiff.c	2013-06-05 12:47:24.891983446 +0200
 @@ -655,7 +655,12 @@ _cupsImageReadTIFF(
      case PHOTOMETRIC_PALETTE :
  	if (!TIFFGetField(tif, TIFFTAG_COLORMAP, &redcmap, &greencmap, &bluecmap))
@@ -17,7 +17,7 @@ diff -up cups-filters-1.0.34/cupsfilters/image-tiff.c.coverity cups-filters-1.0.
  	}
 diff -up cups-filters-1.0.34/filter/pdftopdf/nup.cc.coverity cups-filters-1.0.34/filter/pdftopdf/nup.cc
 --- cups-filters-1.0.34/filter/pdftopdf/nup.cc.coverity	2012-08-20 02:29:46.000000000 +0200
-+++ cups-filters-1.0.34/filter/pdftopdf/nup.cc	2013-06-03 11:10:48.395383435 +0200
++++ cups-filters-1.0.34/filter/pdftopdf/nup.cc	2013-06-05 12:47:24.891983446 +0200
 @@ -52,7 +52,7 @@ bool NupParameters::possible(int nup) //
  {
    // 1 2 3 4 6 8 9 10 12 15 16
@@ -29,7 +29,7 @@ diff -up cups-filters-1.0.34/filter/pdftopdf/nup.cc.coverity cups-filters-1.0.34
  
 diff -up cups-filters-1.0.34/filter/textcommon.c.coverity cups-filters-1.0.34/filter/textcommon.c
 --- cups-filters-1.0.34/filter/textcommon.c.coverity	2012-06-22 18:10:47.000000000 +0200
-+++ cups-filters-1.0.34/filter/textcommon.c	2013-06-03 11:12:35.562934632 +0200
++++ cups-filters-1.0.34/filter/textcommon.c	2013-06-05 12:47:24.892983432 +0200
 @@ -608,6 +608,8 @@ TextMain(const char *name,	/* I - Name o
  
      if (PageColumns < 1)
@@ -69,7 +69,7 @@ diff -up cups-filters-1.0.34/filter/textcommon.c.coverity cups-filters-1.0.34/fi
  
 diff -up cups-filters-1.0.34/filter/texttopdf.c.coverity cups-filters-1.0.34/filter/texttopdf.c
 --- cups-filters-1.0.34/filter/texttopdf.c.coverity	2013-03-01 19:06:58.000000000 +0100
-+++ cups-filters-1.0.34/filter/texttopdf.c	2013-06-03 11:13:22.533299254 +0200
++++ cups-filters-1.0.34/filter/texttopdf.c	2013-06-05 12:47:24.892983432 +0200
 @@ -1220,6 +1220,7 @@ static void write_pretty_header() // {{{
        x = PageRight - PageLeft - 36.0f / LinesPerInch - stringwidth_x(pagestr);
    }
@@ -80,7 +80,7 @@ diff -up cups-filters-1.0.34/filter/texttopdf.c.coverity cups-filters-1.0.34/fil
  }
 diff -up cups-filters-1.0.34/fontembed/embed_sfnt.c.coverity cups-filters-1.0.34/fontembed/embed_sfnt.c
 --- cups-filters-1.0.34/fontembed/embed_sfnt.c.coverity	2012-06-22 18:10:47.000000000 +0200
-+++ cups-filters-1.0.34/fontembed/embed_sfnt.c	2013-06-03 11:14:09.803659682 +0200
++++ cups-filters-1.0.34/fontembed/embed_sfnt.c	2013-06-05 12:47:24.892983432 +0200
 @@ -335,7 +335,7 @@ static const char *emb_otf_get_post_name
      if (gid<num_glyphs) {
        unsigned short idx=get_USHORT(post+34+2*gid);
@@ -92,7 +92,7 @@ diff -up cups-filters-1.0.34/fontembed/embed_sfnt.c.coverity cups-filters-1.0.34
        } else if (idx<32768) {
 diff -up cups-filters-1.0.34/utils/cups-browsed.c.coverity cups-filters-1.0.34/utils/cups-browsed.c
 --- cups-filters-1.0.34/utils/cups-browsed.c.coverity	2013-04-10 17:37:14.000000000 +0200
-+++ cups-filters-1.0.34/utils/cups-browsed.c	2013-06-03 11:16:45.768548935 +0200
++++ cups-filters-1.0.34/utils/cups-browsed.c	2013-06-05 12:47:52.970593829 +0200
 @@ -403,6 +403,8 @@ gboolean handle_cups_queues(gpointer unu
  	  p->timeout = current_time + TIMEOUT_RETRY;
  	  break;
@@ -102,16 +102,17 @@ diff -up cups-filters-1.0.34/utils/cups-browsed.c.coverity cups-filters-1.0.34/u
  
  	/* No jobs, not default printer, remove the CUPS queue */
  	request = ippNewRequest(CUPS_DELETE_PRINTER);
-@@ -635,6 +637,8 @@ void generate_local_queue(const char *ho
+@@ -635,6 +637,9 @@ void generate_local_queue(const char *ho
  	   ignore this remote printer */
  	debug_printf("cups-browsed: %s also taken, printer ignored.\n",
  		     local_queue_name);
 +	free (backup_queue_name);
 +	free (remote_host);
++	cupsFreeDests(num_dests, dests);
  	return;
        }
      }
-@@ -716,6 +720,8 @@ void generate_local_queue(const char *ho
+@@ -716,6 +721,8 @@ void generate_local_queue(const char *ho
  			    name ? name : "", type, domain);
      free (uri);
    }
@@ -120,7 +121,7 @@ diff -up cups-filters-1.0.34/utils/cups-browsed.c.coverity cups-filters-1.0.34/u
  
    if (p)
      debug_printf("cups-browsed: Bonjour IDs: Service name: \"%s\", "
-@@ -1562,8 +1568,11 @@ fail:
+@@ -1562,8 +1569,11 @@ fail:
    if (conn)
      httpClose (conn);
  
@@ -133,7 +134,7 @@ diff -up cups-filters-1.0.34/utils/cups-browsed.c.coverity cups-filters-1.0.34/u
  
    /* Stop this timeout handler, we called a new one */
    return FALSE;
-@@ -1933,13 +1942,13 @@ int main(int argc, char*argv[]) {
+@@ -1933,13 +1943,13 @@ int main(int argc, char*argv[]) {
    }
  
    if (BrowsePoll) {
