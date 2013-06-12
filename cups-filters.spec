@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -26,6 +26,11 @@ Patch1: cups-filters-pcl.patch
 Patch2: cups-filters-coverity.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
+
+# Obsolete cups-php (bug #971741)
+Obsoletes: cups-php < 1:1.6.0-1
+# Don't Provide it because we don't build the php module
+#Provides: cups-php = 1:1.6.0-1
 
 BuildRequires: cups-devel
 # pdftopdf
@@ -202,6 +207,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 12 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-7
+- Obsolete cups-php (#971741)
+
 * Wed Jun 05 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-6
 - one more cups-browsed leak fixed (#959682)
 
