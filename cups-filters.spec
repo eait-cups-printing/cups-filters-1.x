@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.34
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -144,7 +144,7 @@ if [ $1 -eq 1 ] ; then
 
     # We can remove this after few releases, it's just for the introduction of cups-browsed.
     if [ -f "$OUT" ]; then
-        echo -e "\nNOTE: This file is not part of CUPS. You need to start&enable cups-browsed service." >> "$OUT"
+        echo -e "\n# NOTE: This file is not part of CUPS. You need to start & enable cups-browsed service." >> "$OUT"
     fi
 
     # move BrowsePoll from cupsd.conf to cups-browsed.conf
@@ -207,6 +207,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 19 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-8
+- fix the note we add in cups-browsed.conf
+
 * Wed Jun 12 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-7
 - Obsolete cups-php (#971741)
 
