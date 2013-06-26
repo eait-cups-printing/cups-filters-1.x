@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.34
-Release: 8%{?dist}
+Version: 1.0.35
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -18,12 +18,9 @@ Release: 8%{?dist}
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Group:   System Environment/Base
-Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/pdf_as_standard_print_job_format
+Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
-
-Patch1: cups-filters-pcl.patch
-Patch2: cups-filters-coverity.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -98,8 +95,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch1 -p1 -b .pcl
-%patch2 -p1 -b .coverity
 
 %build
 # work-around Rpath
@@ -110,7 +105,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %configure --disable-static \
            --disable-silent-rules \
            --with-pdftops=pdftops \
-           --with-browseremoteprotocols=DNSSD,CUPS \
            --with-rcdir=no
 
 make %{?_smp_mflags}
@@ -207,6 +201,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 26 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-1
+- 1.0.35
+
 * Wed Jun 19 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.34-8
 - fix the note we add in cups-browsed.conf
 
