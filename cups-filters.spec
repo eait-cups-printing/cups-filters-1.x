@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,8 @@ Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
+
+Patch1:  cups-filters-man.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -95,6 +97,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+%patch1 -p1 -b .man
 
 %build
 # work-around Rpath
@@ -186,6 +189,8 @@ fi
 %{_datadir}/ppd/cupsfilters
 %{_sbindir}/cups-browsed
 %{_unitdir}/cups-browsed.service
+%{_mandir}/man8/cups-browsed.8.gz
+%{_mandir}/man5/cups-browsed.conf.5.gz
 
 %files libs
 %doc __doc/COPYING fontembed/README
@@ -201,6 +206,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jul 01 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-2
+- add cups-browsed(8) and cups-browsed.conf(5)
+
 * Wed Jun 26 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-1
 - 1.0.35
 
