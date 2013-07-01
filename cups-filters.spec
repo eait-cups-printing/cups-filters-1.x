@@ -23,6 +23,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 Source1: cups-browsed.service
 
 Patch1:  cups-filters-man.patch
+Patch2:  cups-filters-lookup.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -98,6 +99,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 %patch1 -p1 -b .man
+%patch2 -p1 -b .lookup
 
 %build
 # work-around Rpath
@@ -208,6 +210,7 @@ fi
 %changelog
 * Mon Jul 01 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-2
 - add cups-browsed(8) and cups-browsed.conf(5)
+- don't reverse lookup IP address in URI (#975822)
 
 * Wed Jun 26 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-1
 - 1.0.35
