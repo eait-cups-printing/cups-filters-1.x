@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -208,6 +208,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jul 11 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-3
+- Rebuild (qpdf-5.0.0)
+
 * Mon Jul 01 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-2
 - add cups-browsed(8) and cups-browsed.conf(5)
 - don't reverse lookup IP address in URI (#975822)
