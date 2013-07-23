@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -24,6 +24,7 @@ Source1: cups-browsed.service
 
 Patch1:  cups-filters-man.patch
 Patch2:  cups-filters-lookup.patch
+Patch3:  cups-filters-page-label.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -100,6 +101,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %setup -q
 %patch1 -p1 -b .man
 %patch2 -p1 -b .lookup
+
+# Added support for page-label (bug #987515).
+%patch3 -p1 -b .page-label
 
 %build
 # work-around Rpath
@@ -208,6 +212,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jul 23 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-4
+- Added support for page-label (bug #987515).
+
 * Thu Jul 11 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.35-3
 - Rebuild (qpdf-5.0.0)
 
