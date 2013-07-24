@@ -1,6 +1,6 @@
 diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc.page-label cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc
 --- cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc.page-label	2013-04-09 19:14:42.000000000 +0100
-+++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc	2013-07-23 15:33:10.483302470 +0100
++++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc	2013-07-24 08:49:23.919081384 +0100
 @@ -9,6 +9,8 @@
  #include <assert.h>
  #include <cups/cups.h>
@@ -42,7 +42,7 @@ diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf.cc.page-label cups-filters
      if (strcasecmp(val,"even")==0) {
 diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc.page-label cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc
 --- cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc.page-label	2013-02-15 17:37:59.000000000 +0000
-+++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc	2013-07-23 12:24:13.658753592 +0100
++++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc	2013-07-24 09:50:04.437720618 +0100
 @@ -80,12 +80,8 @@ void ProcessingParameters::dump() const
    fprintf(stderr,"evenDuplex: %s\n",
                   (evenDuplex)?"true":"false");
@@ -69,9 +69,20 @@ diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.cc.page-label cu
        // place border
        if ( (param.border!=BorderType::NONE)&&(iA<numOrigPages) ) {
  #if 0 // would be nice, but is not possible
+@@ -310,6 +310,10 @@ const bool origls=param.nup.landscape;
+         page->add_border_rect(rect,param.border,1.0/pgedit.scale);
+       }
+ 
++      if (!param.pageLabel.empty()) {
++	page->add_label(param.page, param.pageLabel);
++      }
++
+       if (!param.fitplot) {
+         curpage->add_subpage(page,pgedit.xpos+xpos,pgedit.ypos+ypos,pgedit.scale,&rect);
+       } else {
 diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h.page-label cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h
 --- cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h.page-label	2012-11-15 15:58:39.000000000 +0000
-+++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h	2013-07-23 14:44:44.484281987 +0100
++++ cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h	2013-07-24 08:49:23.920081389 +0100
 @@ -20,7 +20,7 @@ struct ProcessingParameters {
        border(NONE),
        reverse(false),
@@ -100,7 +111,7 @@ diff -up cups-filters-1.0.35/filter/pdftopdf/pdftopdf_processor.h.page-label cup
  // TODO: ... error output?
 diff -up cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc.page-label cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc
 --- cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc.page-label	2013-03-14 20:32:42.000000000 +0000
-+++ cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc	2013-07-23 15:03:09.219500610 +0100
++++ cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc	2013-07-24 08:49:23.920081389 +0100
 @@ -257,6 +257,94 @@ void QPDF_PDFTOPDF_PageHandle::rotate(Ro
  }
  // }}}
@@ -207,7 +218,7 @@ diff -up cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.cc.page-lab
    pdf.reset();
 diff -up cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.h.page-label cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.h
 --- cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.h.page-label	2012-11-15 15:58:39.000000000 +0000
-+++ cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.h	2013-07-23 14:45:07.801419762 +0100
++++ cups-filters-1.0.35/filter/pdftopdf/qpdf_pdftopdf_processor.h	2013-07-24 08:49:23.920081389 +0100
 @@ -11,6 +11,7 @@ public:
    virtual void add_subpage(const std::shared_ptr<PDFTOPDF_PageHandle> &sub,float xpos,float ypos,float scale,const PageRect *crop=NULL);
    virtual void mirror();

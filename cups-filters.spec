@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -212,6 +212,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-5
+- Handle page-label when printing n-up as well.
+
 * Tue Jul 23 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-4
 - Added support for page-label (bug #987515).
 
