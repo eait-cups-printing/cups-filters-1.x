@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,6 +25,7 @@ Source1: cups-browsed.service
 Patch1:  cups-filters-man.patch
 Patch2:  cups-filters-lookup.patch
 Patch3:  cups-filters-page-label.patch
+Patch4:  cups-filters-textfilters.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -104,6 +105,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Added support for page-label (bug #987515).
 %patch3 -p1 -b .page-label
+
+# Set cost for text filters to 200 (bug #988909).
+%patch4 -p1 -b .textfilters
 
 %build
 # work-around Rpath
@@ -212,6 +216,10 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jul 30 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-6
+- Set cost for text filters to 200 so that the paps filter gets
+  preference for the time being (bug #988909).
+
 * Wed Jul 24 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-5
 - Handle page-label when printing n-up as well.
 
