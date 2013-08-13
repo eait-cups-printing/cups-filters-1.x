@@ -4,17 +4,17 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.35
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
 #         backends: parallel, serial
-# GPLv2+:  filters: textonly, texttops, imagetops
+# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
 # LGPLv2+:   utils: cups-browsed
-# MIT:     filters: pdftoijs, pdftoopvp, pdftopdf, pdftoraster
+# MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Group:   System Environment/Base
@@ -26,6 +26,7 @@ Patch1:  cups-filters-man.patch
 Patch2:  cups-filters-lookup.patch
 Patch3:  cups-filters-page-label.patch
 Patch4:  cups-filters-textfilters.patch
+Patch5:  cups-filters-gs-filters.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -72,6 +73,10 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
+# Ghostscript CUPS filters live here since Ghostscript 9.08.
+Provides: ghostscript-cups = 9.08
+Obsoletes: ghostscript-cups < 9.08
+
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 Group:   System Environment/Libraries
@@ -108,6 +113,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Set cost for text filters to 200 (bug #988909).
 %patch4 -p1 -b .textfilters
+
+# Upstream patch to move in filters from ghostscript.
+%patch5 -p1 -b .gs-filters
 
 %build
 # work-around Rpath
@@ -216,6 +224,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 13 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-7
+- Upstream patch to move in filters from ghostscript.
+
 * Tue Jul 30 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-6
 - Set cost for text filters to 200 so that the paps filter gets
   preference for the time being (bug #988909).
