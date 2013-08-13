@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.35
-Release: 6%{?dist}
+Version: 1.0.36
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,10 +22,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
 
-Patch1:  cups-filters-man.patch
-Patch2:  cups-filters-lookup.patch
-Patch3:  cups-filters-page-label.patch
-Patch4:  cups-filters-textfilters.patch
+Patch1:  cups-filters-textfilters.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -100,14 +97,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch1 -p1 -b .man
-%patch2 -p1 -b .lookup
-
-# Added support for page-label (bug #987515).
-%patch3 -p1 -b .page-label
 
 # Set cost for text filters to 200 (bug #988909).
-%patch4 -p1 -b .textfilters
+%patch1 -p1 -b .textfilters
 
 %build
 # work-around Rpath
@@ -124,6 +116,11 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+
+# Avoid conflicts with ghostscript < 9.08
+rm -f %{buildroot}%{_datadir}/ppd/cupsfilters/pxl{color,mono}.ppd
+rm -f %{buildroot}%{_cups_serverbin}/filter/gsto*
+sed -i -e '/gstoraster/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
 
 # https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
 mkdir __doc
@@ -204,18 +201,23 @@ fi
 
 %files libs
 %doc __doc/COPYING fontembed/README
-%attr(0755,root,root) %{_libdir}/libcupsfilters.so.*
-%attr(0755,root,root) %{_libdir}/libfontembed.so.*
+%{_libdir}/libcupsfilters.so.*
+%{_libdir}/libfontembed.so.*
 
 %files devel
 %{_includedir}/cupsfilters
 %{_includedir}/fontembed
+%{_datadir}/cups/ppdc/escp.h
 %{_libdir}/pkgconfig/libcupsfilters.pc
 %{_libdir}/pkgconfig/libfontembed.pc
 %{_libdir}/libcupsfilters.so
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 13 2013 Tim Waugh <twaugh@redhat.com> - 1.0.36-1
+- 1.0.36 (without ghostscript filters, which are still in
+  ghostscript-cups).
+
 * Tue Jul 30 2013 Tim Waugh <twaugh@redhat.com> - 1.0.35-6
 - Set cost for text filters to 200 so that the paps filter gets
   preference for the time being (bug #988909).
