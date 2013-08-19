@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.36
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -213,6 +213,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Aug 19 2013 Marek Kasik <mkasik@redhat.com> - 1.0.36-2
+- Rebuild (poppler-0.24.0)
+
 * Tue Aug 13 2013 Tim Waugh <twaugh@redhat.com> - 1.0.36-1
 - 1.0.36.
 
