@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.36
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,7 +22,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 Source1: cups-browsed.service
 
-Patch1:  cups-filters-textfilters.patch
+Patch1:  cups-filters-filter-costs.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -102,8 +102,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-# Set cost for text filters to 200 (bug #988909).
-%patch1 -p1 -b .textfilters
+# Upstream patch to re-work filter costs (bug #998977).
+%patch1 -p1 -b .filter-costs
 
 %build
 # work-around Rpath
@@ -213,6 +213,11 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 21 2013 Tim Waugh <twaugh@redhat.com> - 1.0.36-3
+- Upstream patch to re-work filter costs (bug #998977). No longer need
+  text filter costs patch as paps gets used by default now if
+  installed.
+
 * Mon Aug 19 2013 Marek Kasik <mkasik@redhat.com> - 1.0.36-2
 - Rebuild (poppler-0.24.0)
 
