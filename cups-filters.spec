@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.36
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -136,6 +136,9 @@ rm -f %{buildroot}%{_bindir}/ttfread
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 644 %{SOURCE1} %{buildroot}%{_unitdir}
 
+%check
+make check
+
 %post
 %systemd_post cups-browsed.service
 
@@ -213,6 +216,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 27 2013 Jaromír Končický <jkoncick@redhat.com> - 1.0.36-4
+- Added checking phase (make check)
+
 * Wed Aug 21 2013 Tim Waugh <twaugh@redhat.com> - 1.0.36-3
 - Upstream patch to re-work filter costs (bug #998977). No longer need
   text filter costs patch as paps gets used by default now if
