@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.36
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -53,6 +53,9 @@ BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python-cups
+
+# Testing font for test scripts.
+BuildRequires: dejavu-sans-fonts
 
 # autogen.sh
 BuildRequires: autoconf
@@ -216,6 +219,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 27 2013 Jaromír Končický <jkoncick@redhat.com> - 1.0.36-5
+- Added build dependency - font required for running tests
+
 * Tue Aug 27 2013 Jaromír Končický <jkoncick@redhat.com> - 1.0.36-4
 - Added checking phase (make check)
 
