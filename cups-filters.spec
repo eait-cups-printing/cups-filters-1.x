@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.38
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,6 +20,8 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+
+Patch1: cups-filters-pdf-landscape.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -102,6 +104,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
+# Fix landscape printing for PDFs (bug #768811).
+%patch1 -p1 -b .pdf-landscape
+
 %build
 # work-around Rpath
 ./autogen.sh
@@ -117,6 +122,11 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+
+# Avoid conflicts with ghostscript < 9.08
+rm -f %{buildroot}%{_datadir}/ppd/cupsfilters/pxl{color,mono}.ppd
+rm -f %{buildroot}%{_cups_serverbin}/filter/gsto*
+sed -i -e '/gstoraster/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
 
 # https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
 mkdir __doc
@@ -213,6 +223,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Sep 17 2013 Tim Waugh <twaugh@redhat.com> - 1.0.38-2
+- Fix landscape printing for PDFs (bug #768811).
+
 * Wed Sep 04 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.38-1
 - 1.0.38
 
