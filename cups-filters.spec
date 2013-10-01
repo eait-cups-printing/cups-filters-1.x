@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.38
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,6 +23,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 
 Patch1: cups-filters-pdf-landscape.patch
 Patch2: cups-filters-format-mismatch.patch
+Patch3: cups-filters-browsepoll-notifications.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -110,6 +111,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Fixes for some printf-type format mismatches (bug #1014093).
 %patch2 -p1 -b .format-mismatch
+
+# Use IPP notifications for BrowsePoll when possible (bug #975241).
+%patch3 -p1 -b .browsepoll-notifications
 
 %build
 # work-around Rpath
@@ -227,6 +231,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Oct  1 2013 Tim Waugh <twaugh@redhat.com> - 1.0.38-4
+- Use IPP notifications for BrowsePoll when possible (bug #975241).
+
 * Tue Oct  1 2013 Tim Waugh <twaugh@redhat.com> - 1.0.38-3
 - Fixes for some printf-type format mismatches (bug #1014093).
 
