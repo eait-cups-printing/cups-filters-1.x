@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.39
+Version: 1.0.40
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -20,8 +20,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch1: cups-filters-format-mismatch.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -104,18 +102,17 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-# Fixes for some printf-type format mismatches (bug #1014093).
-%patch1 -p1 -b .format-mismatch
-
 %build
 # work-around Rpath
 ./autogen.sh
 
-# --with-pdftops=pdftops - use Poppler instead of Ghostscript (see README)
+# --with-pdftops=hybrid - use Poppler's pdftops instead of Ghostscript for
+#                         Brother, Minolta, and Konica Minolta to work around
+#                         bugs in the printer's PS interpreters
 # --with-rcdir=no - don't install SysV init script
 %configure --disable-static \
            --disable-silent-rules \
-           --with-pdftops=pdftops \
+           --with-pdftops=hybrid \
            --with-rcdir=no
 
 make %{?_smp_mflags}
@@ -223,6 +220,10 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Oct 11 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.40-1
+- 1.0.40
+- Use new "hybrid" pdftops renderer.
+
 * Thu Oct 03 2013 Jaromír Končický <jkoncick@redhat.com> - 1.0.39-1
 - 1.0.39
 - Removed obsolete patches "pdf-landscape" and "browsepoll-notifications"
