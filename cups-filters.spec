@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.40
-Release: 2.0.0.1%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,7 +22,6 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch1: cups-filters-pdf-landscape.patch
-Patch2: cups-filters-format-mismatch.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -108,9 +107,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # Fix PDF landscape printing (bug #768811).
 %patch1 -p1 -b .pdf-landscape
 
-# Revert bug for bug #1014093.
-%patch2 -p1 -b .format-mismatch
-
 %build
 # work-around Rpath
 ./autogen.sh
@@ -128,11 +124,6 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
-
-# Avoid conflicts with ghostscript < 9.08
-rm -f %{buildroot}%{_datadir}/ppd/cupsfilters/pxl{color,mono}.ppd
-rm -f %{buildroot}%{_cups_serverbin}/filter/gsto*
-sed -i -e '/gstoraster/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
 
 # https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
 mkdir __doc
@@ -229,8 +220,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
-* Tue Oct 15 2013 Tim Waugh <twaugh@redhat.com> - 1.0.40-2.0.0.1
-- Revert bug for bug #1014093.
+* Wed Oct 16 2013 Tim Waugh <twaugh@redhat.com> - 1.0.40-3
+- Ship the gstoraster MIME conversion rule now we provide that filter
+  (bug #1019261).
 
 * Fri Oct 11 2013 Tim Waugh <twaugh@redhat.com> - 1.0.40-2
 - Fix PDF landscape printing (bug #768811).
