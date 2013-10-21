@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.40
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,6 +22,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch1: cups-filters-pdf-landscape.patch
+Patch2: cups-filters-socket-leak.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -106,6 +107,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Fix PDF landscape printing (bug #768811).
 %patch1 -p1 -b .pdf-landscape
+
+# Fix socket leaks in the BrowsePoll code (bug #1021512).
+%patch2 -p1 -b .socket-leak
 
 %build
 # work-around Rpath
@@ -220,6 +224,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Oct 21 2013 Tim Waugh <twaugh@redhat.com> - 1.0.40-4
+- Fix socket leaks in the BrowsePoll code (bug #1021512).
+
 * Wed Oct 16 2013 Tim Waugh <twaugh@redhat.com> - 1.0.40-3
 - Ship the gstoraster MIME conversion rule now we provide that filter
   (bug #1019261).
