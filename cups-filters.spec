@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.41
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,6 +22,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch1: cups-filters-pdf-landscape.patch
+Patch2: cups-filters-dbus.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -35,12 +36,13 @@ BuildRequires: cups-devel
 BuildRequires: qpdf-devel
 # pdftops
 BuildRequires: poppler-utils
-# pdftoijs, pdftoopvp, pdftoraster
+# pdftoijs, pdftoopvp, pdftoraster, gstoraster
 BuildRequires: poppler-devel poppler-cpp-devel
 BuildRequires: libjpeg-devel
 BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
 BuildRequires: zlib-devel
+BuildRequires: pkgconfig dbus-devel
 # libijs
 BuildRequires: ghostscript-devel
 BuildRequires: freetype-devel
@@ -107,6 +109,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # Fix PDF landscape printing (bug #768811).
 %patch1 -p1 -b .pdf-landscape
 
+# Include dbus so that colord support works (bug #1026928).
+%patch2 -p1 -b .dbus
+
 %build
 # work-around Rpath
 ./autogen.sh
@@ -118,6 +123,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %configure --disable-static \
            --disable-silent-rules \
            --with-pdftops=hybrid \
+           --enable-dbus \
            --with-rcdir=no
 
 make %{?_smp_mflags}
@@ -220,6 +226,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Nov  6 2013 Tim Waugh <twaugh@redhat.com> - 1.0.41-2
+- Include dbus so that colord support works (bug #1026928).
+
 * Wed Oct 30 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.41-1
 - 1.0.41 - PPD-less printing support
 
