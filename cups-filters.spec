@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.41
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,6 +23,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 
 Patch1: cups-filters-pdf-landscape.patch
 Patch2: cups-filters-dbus.patch
+Patch3: cups-filters-memory-leaks.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -111,6 +112,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Include dbus so that colord support works (bug #1026928).
 %patch2 -p1 -b .dbus
+
+# Fix memory leaks in cups-browsed (bug #1027317).
+%patch3 -p1 -b .memory-leaks
 
 %build
 # work-around Rpath
@@ -226,6 +230,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Nov 14 2013 Jaromír Končický <jkoncick@redhat.com> - 1.0.41-3
+- Fix memory leaks in cups-browsed (bug #1027317).
+
 * Wed Nov  6 2013 Tim Waugh <twaugh@redhat.com> - 1.0.41-2
 - Include dbus so that colord support works (bug #1026928).
 
