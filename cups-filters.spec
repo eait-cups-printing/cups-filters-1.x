@@ -3,14 +3,14 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.41
-Release: 4%{?dist}
+Version: 1.0.42
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
 #         backends: parallel, serial
-# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops
+# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops, foomatic-rip
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
 # LGPLv2+:   utils: cups-browsed
@@ -22,9 +22,6 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch1: cups-filters-pdf-landscape.patch
-Patch2: cups-filters-dbus.patch
-Patch3: cups-filters-memory-leaks.patch
-Patch4: cups-filters-filter-costs.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -79,6 +76,10 @@ Requires(postun): systemd
 Provides: ghostscript-cups = 9.08
 Obsoletes: ghostscript-cups < 9.08
 
+# foomatic-rip's upstream moved from foomatic-filters to cups-filters-1.0.42
+Provides: foomatic-filters = 4.0.9-8
+Obsoletes: foomatic-filters < 4.0.9-8
+
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 Group:   System Environment/Libraries
@@ -110,16 +111,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Fix PDF landscape printing (bug #768811).
 %patch1 -p1 -b .pdf-landscape
-
-# Include dbus so that colord support works (bug #1026928).
-%patch2 -p1 -b .dbus
-
-# Fix memory leaks in cups-browsed (bug #1027317).
-%patch3 -p1 -b .memory-leaks
-
-# Adjust filter costs so application/vnd.adobe-read-postscript input
-# doesn't go via pstotiff (bug #1008166).
-%patch4 -p1 -b .filter-costs
 
 %build
 # work-around Rpath
@@ -219,6 +210,7 @@ fi
 %{_unitdir}/cups-browsed.service
 %{_mandir}/man8/cups-browsed.8.gz
 %{_mandir}/man5/cups-browsed.conf.5.gz
+%{_mandir}/man1/foomatic-rip.1.gz
 
 %files libs
 %doc __doc/COPYING fontembed/README
@@ -235,6 +227,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Sat Nov 30 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.42-1
+- 1.0.42: includes foomatic-rip (obsoletes foomatic-filters package)
+
 * Tue Nov 19 2013 Tim Waugh <twaugh@redhat.com> - 1.0.41-4
 - Adjust filter costs so application/vnd.adobe-read-postscript input
   doesn't go via pstotiff (bug #1008166).
