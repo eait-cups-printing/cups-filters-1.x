@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.42
+Version: 1.0.43
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -17,11 +17,8 @@ Release: 1%{?dist}
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
-Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch1: cups-filters-pdf-landscape.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -108,9 +105,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-
-# Fix PDF landscape printing (bug #768811).
-%patch1 -p1 -b .pdf-landscape
 
 %build
 # work-around Rpath
@@ -227,6 +221,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Dec 20 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.43-1
+- 1.0.43: upstream fix for bug #768811 (pdf-landscape)
+
 * Sat Nov 30 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.42-1
 - 1.0.42: includes foomatic-rip (obsoletes foomatic-filters package)
 
