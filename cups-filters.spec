@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.43
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -140,6 +140,10 @@ rm -f %{buildroot}%{_bindir}/ttfread
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 
+# LSB3.2 requires /usr/bin/foomatic-rip,
+# create it temporarily as a relative symlink
+ln -sf ../lib/cups/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
+
 %check
 make check
 
@@ -205,6 +209,7 @@ fi
 %{_mandir}/man8/cups-browsed.8.gz
 %{_mandir}/man5/cups-browsed.conf.5.gz
 %{_mandir}/man1/foomatic-rip.1.gz
+%{_bindir}/foomatic-rip
 
 %files libs
 %doc __doc/COPYING fontembed/README
@@ -221,6 +226,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jan 14 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.43-2
+- add /usr/bin/foomatic-rip symlink, due to LSB3.2 (#1052452)
+
 * Fri Dec 20 2013 Jiri Popelka <jpopelka@redhat.com> - 1.0.43-1
 - 1.0.43: upstream fix for bug #768811 (pdf-landscape)
 
