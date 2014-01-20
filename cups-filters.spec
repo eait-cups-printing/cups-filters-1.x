@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.43
-Release: 2%{?dist}
+Version: 1.0.44
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -226,6 +226,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jan 20 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.44-1
+- 1.0.44
+
 * Tue Jan 14 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.43-2
 - add /usr/bin/foomatic-rip symlink, due to LSB3.2 (#1052452)
 
