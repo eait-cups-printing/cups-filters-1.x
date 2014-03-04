@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.46
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -61,6 +61,10 @@ BuildRequires: libtool
 
 Requires: cups-filesystem
 Requires: poppler-utils
+
+# texttopdf
+Requires: liberation-mono-fonts
+
 # pstopdf
 Requires: bc grep sed
 
@@ -226,6 +230,10 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar  4 2014 Tim Waugh <twaugh@redhat.com> - 1.0.46-2
+- The texttopdf filter requires a TrueType monospaced font
+  (bug #1070729).
+
 * Thu Feb 20 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.46-1
 - 1.0.46
 
