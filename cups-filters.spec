@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.46
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -28,24 +28,28 @@ Obsoletes: cups-php < 1:1.6.0-1
 #Provides: cups-php = 1:1.6.0-1
 
 BuildRequires: cups-devel
+BuildRequires: pkgconfig
 # pdftopdf
-BuildRequires: qpdf-devel
+BuildRequires: pkgconfig(libqpdf)
 # pdftops
 BuildRequires: poppler-utils
 # pdftoijs, pdftoopvp, pdftoraster, gstoraster
-BuildRequires: poppler-devel poppler-cpp-devel
+BuildRequires: pkgconfig(poppler)
+BuildRequires: poppler-cpp-devel
 BuildRequires: libjpeg-devel
-BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
-BuildRequires: zlib-devel
-BuildRequires: pkgconfig dbus-devel
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: pkgconfig(dbus-1)
 # libijs
-BuildRequires: ghostscript-devel
-BuildRequires: freetype-devel
-BuildRequires: fontconfig-devel
-BuildRequires: lcms2-devel
+BuildRequires: pkgconfig(ijs)
+BuildRequires: pkgconfig(freetype2)
+BuildRequires: pkgconfig(fontconfig)
+BuildRequires: pkgconfig(lcms) pkgconfig(lcms2)
 # cups-browsed
-BuildRequires: avahi-devel avahi-glib-devel
+BuildRequires: avahi-devel
+BuildRequires: pkgconfig(avahi-glib)
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
@@ -230,6 +234,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Mar 10 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.46-3
+- BuildRequires: pkgconfig(foo) instead of foo-devel
+
 * Tue Mar  4 2014 Tim Waugh <twaugh@redhat.com> - 1.0.46-2
 - The texttopdf filter requires a TrueType monospaced font
   (bug #1070729).
