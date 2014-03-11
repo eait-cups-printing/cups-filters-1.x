@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.47
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,6 +19,9 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+
+Patch1:  cups-filters-urftopdf.patch
+Patch2:  cups-filters-pdftoopvp.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -114,6 +117,12 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
+# Don't ship urftopdf for now (bug #1002947).
+%patch1 -p1 -b .urftopdf
+
+# Don't ship pdftoopvp for now (bug #1027557).
+%patch2 -p1 -b .pdftoopvp
+
 %build
 # work-around Rpath
 ./autogen.sh
@@ -198,7 +207,6 @@ fi
 %files
 %doc __doc/README __doc/AUTHORS __doc/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
-%config(noreplace) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
@@ -234,6 +242,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.47-2
+- Don't ship pdftoopvp (#1027557) and urftopdf (#1002947).
+
 * Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.47-1
 - 1.0.47: CVE-2013-6473 CVE-2013-6476 CVE-2013-6474 CVE-2013-6475 (#1074840)
 
