@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.41
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,6 +25,8 @@ Patch1: cups-filters-pdf-landscape.patch
 Patch2: cups-filters-dbus.patch
 Patch3: cups-filters-memory-leaks.patch
 Patch4: cups-filters-filter-costs.patch
+Patch5:  cups-filters-urftopdf.patch
+Patch6:  cups-filters-pdftoopvp.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -121,6 +123,12 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # doesn't go via pstotiff (bug #1008166).
 %patch4 -p1 -b .filter-costs
 
+# Don't ship urftopdf for now (bug #1002947).
+%patch5 -p1 -b .urftopdf
+
+# Don't ship pdftoopvp for now (bug #1027557).
+%patch6 -p1 -b .pdftoopvp
+
 %build
 # work-around Rpath
 ./autogen.sh
@@ -201,7 +209,6 @@ fi
 %files
 %doc __doc/README __doc/AUTHORS __doc/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
-%config(noreplace) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
@@ -235,6 +242,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.41-5
+- Don't ship pdftoopvp (#1027557) and urftopdf (#1002947).
+
 * Tue Nov 19 2013 Tim Waugh <twaugh@redhat.com> - 1.0.41-4
 - Adjust filter costs so application/vnd.adobe-read-postscript input
   doesn't go via pstotiff (bug #1008166).
