@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.41
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,6 +27,7 @@ Patch3: cups-filters-memory-leaks.patch
 Patch4: cups-filters-filter-costs.patch
 Patch5:  cups-filters-urftopdf.patch
 Patch6:  cups-filters-pdftoopvp.patch
+Patch7: cups-filters-bug1083327.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -128,6 +129,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Don't ship pdftoopvp for now (bug #1027557).
 %patch6 -p1 -b .pdftoopvp
+
+# Remote command injection in cups-browsed (bug #1083327).
+%patch7 -p1 -b .bug1083327
 
 %build
 # work-around Rpath
@@ -242,6 +246,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Apr 02 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.41-6
+- Remote command injection in cups-browsed (bug #1083327).
+
 * Tue Mar 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.41-5
 - Don't ship pdftoopvp (#1027557) and urftopdf (#1002947).
 
