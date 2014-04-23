@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.52
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,9 +19,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch1:  cups-filters-urftopdf.patch
-Patch2:  cups-filters-pdftoopvp.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -117,12 +114,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-# Don't ship urftopdf for now (bug #1002947).
-%patch1 -p1 -b .urftopdf
-
-# Don't ship pdftoopvp for now (bug #1027557).
-%patch2 -p1 -b .pdftoopvp
-
 %build
 # work-around Rpath
 ./autogen.sh
@@ -160,6 +151,15 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 # LSB3.2 requires /usr/bin/foomatic-rip,
 # create it temporarily as a relative symlink
 ln -sf ../lib/cups/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
+
+# Don't ship urftopdf for now (bug #1002947).
+rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
+sed -i '/urftopdf/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
+
+# Don't ship pdftoopvp for now (bug #1027557).
+rm -f %{buildroot}%{_cups_serverbin}/filter/pdftoopvp
+rm -f %{buildroot}%{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
+
 
 %check
 make check
@@ -242,6 +242,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Apr 23 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.52-2
+- Remove pdftoopvp and urftopdf in %%install instead of not building them.
+
 * Tue Apr 08 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.52-1
 - 1.0.52
 
