@@ -3,31 +3,22 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.41
-Release: 6%{?dist}
+Version: 1.0.53
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
 #         backends: parallel, serial
-# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops
+# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops, foomatic-rip
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
 # LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
-Group:   System Environment/Base
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch1: cups-filters-pdf-landscape.patch
-Patch2: cups-filters-dbus.patch
-Patch3: cups-filters-memory-leaks.patch
-Patch4: cups-filters-filter-costs.patch
-Patch5:  cups-filters-urftopdf.patch
-Patch6:  cups-filters-pdftoopvp.patch
-Patch7: cups-filters-bug1083327.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -37,24 +28,28 @@ Obsoletes: cups-php < 1:1.6.0-1
 #Provides: cups-php = 1:1.6.0-1
 
 BuildRequires: cups-devel
+BuildRequires: pkgconfig
 # pdftopdf
-BuildRequires: qpdf-devel
+BuildRequires: pkgconfig(libqpdf)
 # pdftops
 BuildRequires: poppler-utils
 # pdftoijs, pdftoopvp, pdftoraster, gstoraster
-BuildRequires: poppler-devel poppler-cpp-devel
+BuildRequires: pkgconfig(poppler)
+BuildRequires: poppler-cpp-devel
 BuildRequires: libjpeg-devel
-BuildRequires: libpng-devel
 BuildRequires: libtiff-devel
-BuildRequires: zlib-devel
-BuildRequires: pkgconfig dbus-devel
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: pkgconfig(dbus-1)
 # libijs
-BuildRequires: ghostscript-devel
-BuildRequires: freetype-devel
-BuildRequires: fontconfig-devel
-BuildRequires: lcms2-devel
+BuildRequires: pkgconfig(ijs)
+BuildRequires: pkgconfig(freetype2)
+BuildRequires: pkgconfig(fontconfig)
+BuildRequires: pkgconfig(lcms) pkgconfig(lcms2)
 # cups-browsed
-BuildRequires: avahi-devel avahi-glib-devel
+BuildRequires: avahi-devel
+BuildRequires: pkgconfig(avahi-glib)
+BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
@@ -70,6 +65,10 @@ BuildRequires: libtool
 
 Requires: cups-filesystem
 Requires: poppler-utils
+
+# texttopdf
+Requires: liberation-mono-fonts
+
 # pstopdf
 Requires: bc grep sed
 
@@ -111,28 +110,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-# Fix PDF landscape printing (bug #768811).
-%patch1 -p1 -b .pdf-landscape
-
-# Include dbus so that colord support works (bug #1026928).
-%patch2 -p1 -b .dbus
-
-# Fix memory leaks in cups-browsed (bug #1027317).
-%patch3 -p1 -b .memory-leaks
-
-# Adjust filter costs so application/vnd.adobe-read-postscript input
-# doesn't go via pstotiff (bug #1008166).
-%patch4 -p1 -b .filter-costs
-
-# Don't ship urftopdf for now (bug #1002947).
-%patch5 -p1 -b .urftopdf
-
-# Don't ship pdftoopvp for now (bug #1027557).
-%patch6 -p1 -b .pdftoopvp
-
-# Remote command injection in cups-browsed (bug #1083327).
-%patch7 -p1 -b .bug1083327
-
 %build
 # work-around Rpath
 ./autogen.sh
@@ -166,6 +143,18 @@ rm -f %{buildroot}%{_bindir}/ttfread
 # systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
 install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
+
+# Don't ship urftopdf for now (bug #1002947).
+rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
+sed -i '/urftopdf/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
+
+# Don't ship pdftoopvp for now (bug #1027557).
+rm -f %{buildroot}%{_cups_serverbin}/filter/pdftoopvp
+rm -f %{buildroot}%{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
+
+# Don't ship foomatic-rip
+rm -f %{buildroot}%{_cups_serverbin}/filter/foomatic-rip
+rm -f %{buildroot}%{_mandir}/man1/foomatic-rip.1
 
 %check
 make check
@@ -246,6 +235,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Apr 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.53-1
+- 1.0.53
+
 * Wed Apr 02 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.41-6
 - Remote command injection in cups-browsed (bug #1083327).
 
