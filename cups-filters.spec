@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.53
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -45,7 +45,7 @@ BuildRequires: pkgconfig(dbus-1)
 BuildRequires: pkgconfig(ijs)
 BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(fontconfig)
-BuildRequires: pkgconfig(lcms) pkgconfig(lcms2)
+BuildRequires: pkgconfig(lcms2)
 # cups-browsed
 BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
@@ -242,6 +242,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jun 03 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.53-3
+- Remove BuildRequires pkgconfig(lcms). pkgconfig(lcms2) is enough.
+
 * Tue May 13 2014 Marek Kasik <mkasik@redhat.com> - 1.0.53-2
 - Rebuild (poppler-0.26.0)
 
