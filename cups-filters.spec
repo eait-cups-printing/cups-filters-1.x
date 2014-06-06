@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.53
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -240,6 +240,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Jun  6 2014 Tim Waugh <twaugh@redhat.com> - 1.0.53-3
+- Don't use grep's -P switch in pstopdf as it needs execmem (bug #1079534).
+
 * Fri May 09 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.53-2
 - Return Tim's work-around patch for bug #768811.
 
