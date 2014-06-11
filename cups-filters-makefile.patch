@@ -1,0 +1,14 @@
+diff -up cups-filters-1.0.54/Makefile.am.makefile cups-filters-1.0.54/Makefile.am
+--- cups-filters-1.0.54/Makefile.am.makefile	2014-06-11 13:36:11.962393900 +0100
++++ cups-filters-1.0.54/Makefile.am	2014-06-11 13:40:34.343533005 +0100
+@@ -467,7 +467,9 @@ bannertopdf_LDADD = \
+ 	$(FONTCONFIG_LIBS) \
+ 	libfontembed.la
+ 
+-bannertopdf_DEPENDENCIES = $(GETLINE)
++bannertopdf_DEPENDENCIES = \
++	$(GETLINE) \
++	libfontembed.la
+ 
+ commandtoescpx_SOURCES = \
+ 	cupsfilters/driver.h \
