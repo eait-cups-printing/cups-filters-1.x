@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.54
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,6 +19,9 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+
+Patch1: cups-filters-pdf-landscape.patch
+Patch2: cups-filters-makefile.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -113,6 +116,12 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+
+# Fix PDF landscape printing (bug #768811).
+%patch1 -p1 -b .pdf-landscape
+
+# Fixed build issue (bug #1106101).
+%patch2 -p1 -b .cups-filters
 
 %build
 # work-around Rpath
@@ -242,6 +251,11 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 11 2014 Tim Waugh <twaugh@redhat.com> - 1.0.54-2
+- Fix build issue (bug #1106101).
+- Don't use grep's -P switch in pstopdf as it needs execmem (bug #1079534).
+- Return work-around patch for bug #768811.
+
 * Mon Jun 09 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.54-1
 - 1.0.54
 
