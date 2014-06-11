@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.54
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -12,7 +12,7 @@ Release: 2%{?dist}
 #         backends: parallel, serial
 # GPLv2+:  filters: gstopxl, textonly, texttops, imagetops, foomatic-rip
 # GPLv3:   filters: bannertopdf
-# GPLv3+:  filters: urftopdf
+# GPLv3+:  filters: urftopdf, rastertopdf
 # LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
@@ -20,8 +20,7 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-Patch1: cups-filters-pdf-landscape.patch
-Patch2: cups-filters-makefile.patch
+Patch1: cups-filters-makefile.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -117,11 +116,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-# Fix PDF landscape printing (bug #768811).
-%patch1 -p1 -b .pdf-landscape
-
 # Fixed build issue (bug #1106101).
-%patch2 -p1 -b .cups-filters
+%patch1 -p1 -b .cups-filters
 
 %build
 # work-around Rpath
@@ -184,7 +180,7 @@ if [ $1 -eq 1 ] ; then
 
     # We can remove this after few releases, it's just for the introduction of cups-browsed.
     if [ -f "$OUT" ]; then
-        echo -e "\n# NOTE: This file is not part of CUPS. You need to start & enable cups-browsed service." >> "$OUT"
+        echo -e "\n# NOTE: This file is not part of CUPS.\n# You need to enable cups-browsed service\n# and allow ipp-client service in firewall." >> "$OUT"
     fi
 
     # move BrowsePoll from cupsd.conf to cups-browsed.conf
@@ -251,6 +247,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jun 11 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.54-3
+- Remove (F21) pdf-landscape.patch
+
 * Wed Jun 11 2014 Tim Waugh <twaugh@redhat.com> - 1.0.54-2
 - Fix build issue (bug #1106101).
 - Don't use grep's -P switch in pstopdf as it needs execmem (bug #1079534).
