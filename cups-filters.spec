@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.53
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,6 +22,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 
 Patch1: cups-filters-pdf-landscape.patch
 Patch2: cups-filters-makefile.patch
+Patch3: cups-filters-execmem.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -118,6 +119,9 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # Fixed build issue (bug #1106101).
 %patch2 -p1 -b .cups-filters
+
+# Don't use grep's -P switch in pstopdf as it needs execmem (bug #1079534).
+%patch3 -p1 -b .execmem
 
 %build
 # work-around Rpath
@@ -244,6 +248,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Jun 13 2014 Tim Waugh <twaugh@redhat.com> - 1.0.53-5
+- Really fix execmem issue (bug #1079534).
+
 * Wed Jun 11 2014 Tim Waugh <twaugh@redhat.com> - 1.0.53-4
 - Fix build issue (bug #1106101).
 
