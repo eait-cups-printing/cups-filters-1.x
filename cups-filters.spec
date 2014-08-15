@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.55
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -133,16 +133,15 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 
-# https://fedoraproject.org/wiki/Packaging_tricks#With_.25doc
-mkdir __doc
-mv  %{buildroot}%{_datadir}/doc/cups-filters/* __doc
-rm -rf %{buildroot}%{_datadir}/doc/cups-filters
-
 # Don't ship libtool la files.
 rm -f %{buildroot}%{_libdir}/lib*.la
 
 # Not sure what is this good for.
 rm -f %{buildroot}%{_bindir}/ttfread
+
+rm -f %{buildroot}%{_defaultdocdir}/cups-filters/INSTALL
+mkdir -p %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
+cp -p fontembed/README %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
 
 # systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
@@ -205,7 +204,9 @@ fi
 
 
 %files
-%doc __doc/README __doc/AUTHORS __doc/NEWS
+%{_defaultdocdir}/cups-filters/README
+%{_defaultdocdir}/cups-filters/AUTHORS
+%{_defaultdocdir}/cups-filters/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
@@ -228,7 +229,9 @@ fi
 %{_bindir}/foomatic-rip
 
 %files libs
-%doc __doc/COPYING fontembed/README
+%dir %{_defaultdocdir}/cups-filters/
+%{_defaultdocdir}/cups-filters/COPYING
+%{_defaultdocdir}/cups-filters/fontembed/README
 %{_libdir}/libcupsfilters.so.*
 %{_libdir}/libfontembed.so.*
 
@@ -242,6 +245,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Aug 15 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.55-2
+- Use %%_defaultdocdir instead of %%doc
+
 * Mon Jul 28 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.55-1
 - 1.0.55
 
