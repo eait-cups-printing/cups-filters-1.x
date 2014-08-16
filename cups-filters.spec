@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.0.55
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -245,6 +245,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.55-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Fri Aug 15 2014 Jiri Popelka <jpopelka@redhat.com> - 1.0.55-2
 - Use %%_defaultdocdir instead of %%doc
 
