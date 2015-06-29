@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.69
-Release: 2%{?dist}
+Version: 1.0.70
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,8 +19,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch1: cups-filters-browsed-sources.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -115,9 +113,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-
-# Fixes for glib source handling (bug #1228555).
-%patch1 -p1 -b .browsed-sources
 
 %build
 # work-around Rpath
@@ -250,6 +245,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jun 29 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.70-1
+- 1.0.70
+
 * Mon Jun 22 2015 Tim Waugh <twaugh@redhat.com> - 1.0.69-2
 - Fixes for glib source handling (bug #1228555).
 
