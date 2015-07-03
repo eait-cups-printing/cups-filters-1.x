@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.70
+Version: 1.0.71
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -245,6 +245,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Jul 03 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.71-1
+- 1.0.71
+
 * Mon Jun 29 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.70-1
 - 1.0.70
 
