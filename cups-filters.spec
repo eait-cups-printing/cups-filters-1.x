@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.0.71
-Release: 3%{?dist}
+Version: 1.0.73
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,9 +19,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-# Upstream patch for poppler 0.34 support
-# http://bzr.linuxfoundation.org/loggerhead/openprinting/cups-filters/revision/7371
-Patch0:  cups-filters-poppler34.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -116,7 +113,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch0 -p0 -b .poppler34
 
 %build
 # work-around Rpath
@@ -216,6 +212,7 @@ fi
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
+%attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
@@ -249,6 +246,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 19 2015 Jiri Popelka <jpopelka@redhat.com> - 1.0.73-1
+- 1.0.73 - new implicitclass backend
+
 * Fri Jul 24 2015 David Tardon <dtardon@redhat.com> - 1.0.71-3
 - rebuild for Boost 1.58 to fix deps
 
