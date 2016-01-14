@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.5.0
+Version: 1.6.0
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -213,6 +213,7 @@ fi
 # Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
+%attr(0755,root,root) %{_cups_serverbin}/backend/beh
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
@@ -246,6 +247,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jan 14 2016 Jiri Popelka <jpopelka@redhat.com> - 1.6.0-1
+- 1.6.0
+
 * Fri Dec 18 2015 Jiri Popelka <jpopelka@redhat.com> - 1.5.0-1
 - 1.5.0
 
