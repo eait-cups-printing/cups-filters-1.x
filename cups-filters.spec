@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.7.0
+Version: 1.8.0
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -215,13 +215,29 @@ fi
 %attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(0755,root,root) %{_cups_serverbin}/backend/beh
 %{_datadir}/cups/banners
+%{_datadir}/cups/braille
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
 # this needs to be in the main package because of cupsfilters.drv
 %{_datadir}/cups/ppdc/pcl.h
+%{_datadir}/cups/ppdc/braille.defs
+%{_datadir}/cups/ppdc/fr-braille.po
+%{_datadir}/cups/ppdc/imagemagick.defs
+%{_datadir}/cups/ppdc/index.defs
+%{_datadir}/cups/ppdc/liblouis.defs
+%{_datadir}/cups/ppdc/liblouis1.defs
+%{_datadir}/cups/ppdc/liblouis2.defs
+%{_datadir}/cups/ppdc/liblouis3.defs
+%{_datadir}/cups/ppdc/liblouis4.defs
+%{_datadir}/cups/ppdc/media-braille.defs
 %{_datadir}/cups/drv/cupsfilters.drv
+%{_datadir}/cups/drv/generic-brf.drv
+%{_datadir}/cups/drv/indexv3.drv
+%{_datadir}/cups/drv/indexv4.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
+%{_datadir}/cups/mime/braille.convs
+%{_datadir}/cups/mime/braille.types
 %{_datadir}/ppd/cupsfilters
 %{_sbindir}/cups-browsed
 %{_unitdir}/cups-browsed.service
@@ -247,6 +263,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jan 21 2016 Jiri Popelka <jpopelka@redhat.com> - 1.8.0-1
+- 1.8.0
+
 * Tue Jan 19 2016 Jiri Popelka <jpopelka@redhat.com> - 1.7.0-1
 - 1.7.0
 
