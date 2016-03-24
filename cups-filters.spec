@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.8.2
+Version: 1.8.3
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -236,6 +236,7 @@ fi
 %{_datadir}/cups/drv/indexv4.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
+%{_datadir}/cups/mime/cupsfilters-ghostscript.convs
 %{_datadir}/cups/mime/braille.convs
 %{_datadir}/cups/mime/braille.types
 %{_datadir}/ppd/cupsfilters
@@ -263,6 +264,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Mar 24 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.8.3-1
+- Update to 1.8.3, adding cupsfilters-ghostscript.convs to %files
+
 * Fri Feb 12 2016 Jiri Popelka <jpopelka@redhat.com> - 1.8.2-1
 - 1.8.2
 
