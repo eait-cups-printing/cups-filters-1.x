@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.9.0
+Version: 1.10.0
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -19,6 +19,7 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+Patch1:  cups-filters-missing-ppd.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -113,6 +114,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+%patch1 -p1 -b .missing-ppd
 
 %build
 # work-around Rpath
@@ -264,6 +266,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jul 18 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.10.0-1
+- rebase 1.10.0, include missing ppd.h
+
 * Fri Jun 10 2016 Jiri Popelka <jpopelka@redhat.com> - 1.9.0-1
 - 1.9.0
 
