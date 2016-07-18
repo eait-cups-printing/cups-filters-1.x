@@ -266,8 +266,12 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+
 * Mon Jul 18 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.10.0-1
 - rebase 1.10.0, include missing ppd.h
+
+* Mon Jul 18 2016 Marek Kasik <mkasik@redhat.com> - 1.9.0-2
+- Rebuild for poppler-0.45.0
 
 * Fri Jun 10 2016 Jiri Popelka <jpopelka@redhat.com> - 1.9.0-1
 - 1.9.0
