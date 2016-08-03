@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.10.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -141,9 +141,9 @@ rm -f %{buildroot}%{_libdir}/lib*.la
 # Not sure what is this good for.
 rm -f %{buildroot}%{_bindir}/ttfread
 
-rm -f %{buildroot}%{_defaultdocdir}/cups-filters/INSTALL
-mkdir -p %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
-cp -p fontembed/README %{buildroot}%{_defaultdocdir}/cups-filters/fontembed/
+rm -f %{buildroot}%{_pkgdocdir}/INSTALL
+mkdir -p %{buildroot}%{_pkgdocdir}/fontembed/
+cp -p fontembed/README %{buildroot}%{_pkgdocdir}/fontembed/
 
 # systemd unit file
 mkdir -p %{buildroot}%{_unitdir}
@@ -206,9 +206,9 @@ fi
 
 
 %files
-%{_defaultdocdir}/cups-filters/README
-%{_defaultdocdir}/cups-filters/AUTHORS
-%{_defaultdocdir}/cups-filters/NEWS
+%{_pkgdocdir}/README
+%{_pkgdocdir}/AUTHORS
+%{_pkgdocdir}/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
 %attr(0755,root,root) %{_cups_serverbin}/backend/parallel
@@ -250,9 +250,9 @@ fi
 %{_bindir}/foomatic-rip
 
 %files libs
-%dir %{_defaultdocdir}/cups-filters/
-%{_defaultdocdir}/cups-filters/COPYING
-%{_defaultdocdir}/cups-filters/fontembed/README
+%dir %{_pkgdocdir}/
+%{_pkgdocdir}/COPYING
+%{_pkgdocdir}/fontembed/README
 %{_libdir}/libcupsfilters.so.*
 %{_libdir}/libfontembed.so.*
 
@@ -266,6 +266,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 03 2016 Jiri Popelka <jpopelka@redhat.com> - 1.10.0-3
+- %%{_defaultdocdir}/cups-filters/ -> %%{_pkgdocdir}
+
 * Mon Jul 18 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.10.0-2
 - adding new sources cups-filters-1.10.0 
 
