@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.10.0
-Release: 3%{?dist}
+Version: 1.11.2
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,7 +19,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-Patch1:  cups-filters-missing-ppd.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -114,7 +113,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch1 -p1 -b .missing-ppd
 
 %build
 # work-around Rpath
@@ -239,6 +237,8 @@ fi
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/cups/mime/cupsfilters-ghostscript.convs
+%{_datadir}/cups/mime/cupsfilters-mupdf.convs
+%{_datadir}/cups/mime/cupsfilters-poppler.convs
 %{_datadir}/cups/mime/braille.convs
 %{_datadir}/cups/mime/braille.types
 %{_datadir}/ppd/cupsfilters
@@ -266,6 +266,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 30 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.11.2-1
+- rebase to 1.11.2, adding cupsfilters-poppler.convs and cupsfilters-mupdf.convs into package
+
 * Wed Aug 03 2016 Jiri Popelka <jpopelka@redhat.com> - 1.10.0-3
 - %%{_defaultdocdir}/cups-filters/ -> %%{_pkgdocdir}
 
