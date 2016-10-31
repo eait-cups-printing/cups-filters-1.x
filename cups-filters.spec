@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.11.4
-Release: 2%{?dist}
+Version: 1.11.5
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -62,6 +62,7 @@ BuildRequires: dejavu-sans-fonts
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libtool
+BuildRequires: mupdf
 
 Requires: cups-filesystem
 Requires: poppler-utils
@@ -266,6 +267,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Oct 31 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.11.5-1
+- rebase to 1.11.5
+
 * Fri Oct 21 2016 Marek Kasik <mkasik@redhat.com> - 1.11.4-2
 - Rebuild for poppler-0.48.0
 
