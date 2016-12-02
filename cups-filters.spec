@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.11.6
-Release: 2%{?dist}
+Version: 1.12.0
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -150,7 +150,13 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 
 # LSB3.2 requires /usr/bin/foomatic-rip,
 # create it temporarily as a relative symlink
-ln -sf ../lib/cups/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
+ln -sf %{_cups_serverbin}/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
+
+# imagetobrf is going to be mapped as /usr/lib/cups/filter/imagetoubrl
+ln -sf imagetobrf %{buildroot}%{_cups_serverbin}/filter/imagetoubrl
+
+# textbrftoindex3 is going to be mapped as /usr/lib/cups/filter/textbrftoindexv4
+ln -sf textbrftoindexv3 %{buildroot}%{_cups_serverbin}/filter/textbrftoindexv4
 
 # Don't ship urftopdf for now (bug #1002947).
 rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
@@ -215,6 +221,9 @@ fi
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(0755,root,root) %{_cups_serverbin}/backend/beh
+%{_bindir}/foomatic-rip
+%{_bindir}/driverless
+%{_cups_serverbin}/driver/driverless
 %{_datadir}/cups/banners
 %{_datadir}/cups/braille
 %{_datadir}/cups/charsets
@@ -248,7 +257,7 @@ fi
 %{_mandir}/man8/cups-browsed.8.gz
 %{_mandir}/man5/cups-browsed.conf.5.gz
 %{_mandir}/man1/foomatic-rip.1.gz
-%{_bindir}/foomatic-rip
+%{_mandir}/man1/driverless.1.gz
 
 %files libs
 %dir %{_pkgdocdir}/
@@ -267,6 +276,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Dec 02 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.12.0-1
+- rebase to 1.12.0
+
 * Wed Nov 23 2016 David Tardon <dtardon@redhat.com> - 1.11.6-2
 - rebuild for poppler 0.49.0
 
