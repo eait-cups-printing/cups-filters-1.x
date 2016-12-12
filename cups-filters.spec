@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.12.0
-Release: 2%{?dist}
+Version: 1.13.0
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -223,6 +223,7 @@ fi
 %attr(0755,root,root) %{_cups_serverbin}/backend/beh
 %{_bindir}/foomatic-rip
 %{_bindir}/driverless
+%{_cups_serverbin}/backend/driverless
 %{_cups_serverbin}/driver/driverless
 %{_datadir}/cups/banners
 %{_datadir}/cups/braille
@@ -276,6 +277,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Dec 12 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.0-1
+- rebase to 1.13.0
+
 * Fri Dec 02 2016 Zdenek Dohnal <zdohnal@redhat.com> - 1.12.0-2
 - adding new sources
 
