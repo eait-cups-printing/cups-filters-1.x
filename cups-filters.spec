@@ -20,6 +20,8 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
+Patch01: cups-filters-apremotequeueid.patch
+
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
 # Obsolete cups-php (bug #971741)
@@ -114,6 +116,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+%patch01 -p1 -b .apremotequeueid
 
 %build
 # work-around Rpath
@@ -279,6 +282,7 @@ fi
 %changelog
 * Fri Feb 24 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.4-1
 - rebase to 1.13.4
+- 1426567 - Added queues are not marked as remote ones
 
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.13.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
