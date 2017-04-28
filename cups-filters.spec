@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.13.4
-Release: 2%{?dist}
+Version: 1.13.5
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -19,8 +19,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
-
-Patch01: cups-filters-apremotequeueid.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -73,7 +71,7 @@ Requires: poppler-utils
 Requires: liberation-mono-fonts
 
 # pstopdf
-Requires: bc grep sed
+Requires: bc grep sed which
 
 # cups-browsed
 Requires(post): systemd
@@ -116,7 +114,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
-%patch01 -p1 -b .apremotequeueid
 
 %build
 # work-around Rpath
@@ -154,12 +151,6 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 # LSB3.2 requires /usr/bin/foomatic-rip,
 # create it temporarily as a relative symlink
 ln -sf %{_cups_serverbin}/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
-
-# imagetobrf is going to be mapped as /usr/lib/cups/filter/imagetoubrl
-ln -sf imagetobrf %{buildroot}%{_cups_serverbin}/filter/imagetoubrl
-
-# textbrftoindex3 is going to be mapped as /usr/lib/cups/filter/textbrftoindexv4
-ln -sf textbrftoindexv3 %{buildroot}%{_cups_serverbin}/filter/textbrftoindexv4
 
 # Don't ship urftopdf for now (bug #1002947).
 rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
@@ -239,7 +230,7 @@ fi
 %{_datadir}/cups/ppdc/imagemagick.defs
 %{_datadir}/cups/ppdc/index.defs
 %{_datadir}/cups/ppdc/liblouis.defs
-%{_datadir}/cups/ppdc/liblouis1.defs
+%{_datadir}/cups/ppdc/liblouis1.defs.gen.in
 %{_datadir}/cups/ppdc/liblouis2.defs
 %{_datadir}/cups/ppdc/liblouis3.defs
 %{_datadir}/cups/ppdc/liblouis4.defs
@@ -280,6 +271,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Apr 28 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.5-1
+- rebase to 1.13.5
+
 * Tue Mar 28 2017 David Tardon <dtardon@redhat.com> - 1.13.4-2
 - rebuild for poppler 0.53.0
 
