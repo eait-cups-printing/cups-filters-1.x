@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.13.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -64,7 +64,6 @@ BuildRequires: dejavu-sans-fonts
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libtool
-BuildRequires: mupdf
 
 Requires: cups-filesystem
 Requires: poppler-utils
@@ -130,7 +129,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --disable-silent-rules \
            --with-pdftops=hybrid \
            --enable-dbus \
-           --with-rcdir=no
+           --with-rcdir=no \
+           --disable-mutool
 
 make %{?_smp_mflags}
 
@@ -251,7 +251,6 @@ fi
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/cups/mime/cupsfilters-ghostscript.convs
-%{_datadir}/cups/mime/cupsfilters-mupdf.convs
 %{_datadir}/cups/mime/cupsfilters-poppler.convs
 %{_datadir}/cups/mime/braille.convs
 %{_datadir}/cups/mime/braille.types
@@ -280,6 +279,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed May 31 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.4-2
+- removing BuildRequires: mupdf
+
 * Fri Feb 24 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.4-1
 - rebase to 1.13.4
 - 1426567 - Added queues are not marked as remote ones
