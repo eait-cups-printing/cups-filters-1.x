@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.14.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -53,7 +53,7 @@ BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
 
 # Make sure we get postscriptdriver tags.
-BuildRequires: python-cups
+BuildRequires: python3-cups
 
 # Testing font for test scripts.
 BuildRequires: dejavu-sans-fonts
@@ -270,6 +270,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jun 29 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.14.0-3
+- update python Requires/BuildRequires accordingly to Fedora Guidelines for Python (python-cups -> python3-cups)
+
 * Wed May 31 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.14.0-2
 - removing BuildRequires: mupdf
 
