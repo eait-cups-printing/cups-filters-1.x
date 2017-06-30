@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.14.0
-Release: 3%{?dist}
+Version: 1.14.1
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -270,6 +270,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Jun 30 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.14.1-1
+- rebase to 1.14.1
+
 * Thu Jun 29 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.14.0-3
 - update python Requires/BuildRequires accordingly to Fedora Guidelines for Python (python-cups -> python3-cups)
 
