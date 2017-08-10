@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.13.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -279,6 +279,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Aug 10 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.4-3
+- rebuilt for qpdf-libs
+
 * Wed May 31 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.13.4-2
 - removing BuildRequires: mupdf
 
