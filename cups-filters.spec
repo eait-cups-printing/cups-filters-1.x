@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.16.3
+Version: 1.17.2
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -122,12 +122,25 @@ This is the development package for OpenPrinting CUPS filters and backends.
 #                         Brother, Minolta, and Konica Minolta to work around
 #                         bugs in the printer's PS interpreters
 # --with-rcdir=no - don't install SysV init script
+# --enable-auto-setup-driverless - enable automatic setup of IPP network printers
+#                                  with driverless support
+# --enable-driverless - enable PPD generator for driverless printing in 
+#                       /usr/lib/cups/driver, it is for manual setup of 
+#                       driverless printers with printer setup tool
+# --disable-static - do not build static libraries (becuase of Fedora Packaging
+#                    Guidelines)
+# --enable-dbus - enable DBus Connection Manager's code
+# --disable-silent-rules - verbose build output
+# --disable-mutool - mupdf is retired in Fedora, use qpdf
+
 %configure --disable-static \
            --disable-silent-rules \
            --with-pdftops=hybrid \
            --enable-dbus \
            --with-rcdir=no \
-           --disable-mutool
+           --disable-mutool \
+           --enable-driverless \
+           --enable-auto-setup-driverless
 
 make %{?_smp_mflags}
 
@@ -270,6 +283,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Sep 06 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.2-1
+- rebase to 1.17.2
+
 * Tue Aug 22 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.16.3-1
 - rebase to 1.16.3
 
