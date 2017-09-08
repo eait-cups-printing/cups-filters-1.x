@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.17.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -85,6 +85,9 @@ Obsoletes: ghostscript-cups < 9.08
 Provides: foomatic-filters = 4.0.9-8
 Obsoletes: foomatic-filters < 4.0.9-8
 
+# http://bzr.linuxfoundation.org/loggerhead/openprinting/cups-filters/revision/7701
+Patch0: poppler-0.58.patch
+
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 Group:   System Environment/Libraries
@@ -113,6 +116,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
 %setup -q
+
+%patch0 -p0
 
 %build
 # work-around Rpath
@@ -283,6 +288,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Sep 08 2017 David Tardon <dtardon@redhat.com> - 1.17.2-2
+- rebuild for poppler 0.59.0
+
 * Wed Sep 06 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.2-1
 - rebase to 1.17.2
 
