@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.17.2
-Release: 2%{?dist}
+Version: 1.17.7
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -85,9 +85,6 @@ Obsoletes: ghostscript-cups < 9.08
 Provides: foomatic-filters = 4.0.9-8
 Obsoletes: foomatic-filters < 4.0.9-8
 
-# http://bzr.linuxfoundation.org/loggerhead/openprinting/cups-filters/revision/7701
-Patch0: poppler-0.58.patch
-
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 Group:   System Environment/Libraries
@@ -117,7 +114,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-%patch0 -p0
 
 %build
 # work-around Rpath
@@ -233,6 +229,7 @@ fi
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(0755,root,root) %{_cups_serverbin}/backend/beh
+%attr(0755,root,root) %{_cups_serverbin}/backend/cups-brf
 %{_bindir}/foomatic-rip
 %{_bindir}/driverless
 %{_cups_serverbin}/backend/driverless
@@ -248,13 +245,14 @@ fi
 %{_datadir}/cups/ppdc/imagemagick.defs
 %{_datadir}/cups/ppdc/index.defs
 %{_datadir}/cups/ppdc/liblouis.defs
-%{_datadir}/cups/ppdc/liblouis1.defs.gen.in
+%{_datadir}/cups/ppdc/liblouis1.defs
 %{_datadir}/cups/ppdc/liblouis2.defs
 %{_datadir}/cups/ppdc/liblouis3.defs
 %{_datadir}/cups/ppdc/liblouis4.defs
 %{_datadir}/cups/ppdc/media-braille.defs
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/drv/generic-brf.drv
+%{_datadir}/cups/drv/generic-ubrl.drv
 %{_datadir}/cups/drv/indexv3.drv
 %{_datadir}/cups/drv/indexv4.drv
 %{_datadir}/cups/mime/cupsfilters.types
@@ -288,6 +286,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Sep 19 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.7-1
+- rebase to 1.17.7
+
 * Fri Sep 08 2017 David Tardon <dtardon@redhat.com> - 1.17.2-2
 - rebuild for poppler 0.59.0
 
