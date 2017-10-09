@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.17.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -77,14 +77,6 @@ Requires: bc grep sed which
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-
-# Ghostscript CUPS filters live here since Ghostscript 9.08.
-Provides: ghostscript-cups = 9.08
-Obsoletes: ghostscript-cups < 9.08
-
-# foomatic-rip's upstream moved from foomatic-filters to cups-filters-1.0.42
-Provides: foomatic-filters = 4.0.9-8
-Obsoletes: foomatic-filters < 4.0.9-8
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -288,6 +280,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Oct 09 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.8-4
+- removing Provides ghostscript-cups and foomatic-filters
+
 * Fri Oct 06 2017 David Tardon <dtardon@redhat.com> - 1.17.8-3
 - rebuild for poppler 0.60.1
 
