@@ -258,7 +258,7 @@ fi
 
 %files libs
 %dir %{_pkgdocdir}/
-%license COPYING
+%{_pkgdocdir}/COPYING
 %{_pkgdocdir}/fontembed/README
 %{_libdir}/libcupsfilters.so.*
 %{_libdir}/libfontembed.so.*
