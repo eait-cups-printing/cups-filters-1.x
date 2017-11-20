@@ -1,7 +1,28 @@
 diff -up cups-filters-1.16.1/utils/cups-browsed.c.location cups-filters-1.16.1/utils/cups-browsed.c
---- cups-filters-1.16.1/utils/cups-browsed.c.location	2017-10-06 13:35:52.733437212 +0200
-+++ cups-filters-1.16.1/utils/cups-browsed.c	2017-10-06 13:38:11.053339580 +0200
-@@ -6360,7 +6360,7 @@ static void
+--- cups-filters-1.16.1/utils/cups-browsed.c.location	2017-08-09 20:02:48.000000000 +0200
++++ cups-filters-1.16.1/utils/cups-browsed.c	2017-11-20 19:40:25.943791715 +0100
+@@ -4472,6 +4472,9 @@ gboolean update_cups_queues(gpointer unu
+ 		    IPP_PRINTER_IDLE);
+       /* ... and accepting jobs */
+       ippAddBoolean(request, IPP_TAG_PRINTER, "printer-is-accepting-jobs", 1);
++      /* Location */
++      ippAddString(request, IPP_TAG_PRINTER, IPP_TAG_TEXT,
++		   "printer-location", NULL, p->location);
+       num_options = 0;
+       options = NULL;
+       /* Device URI: ipp(s)://<remote host>:631/printers/<remote queue>
+@@ -4484,9 +4487,7 @@ gboolean update_cups_queues(gpointer unu
+       /* Description */
+       num_options = cupsAddOption("printer-info", p->info,
+ 				  num_options, &options);
+-      /* Location */
+-      num_options = cupsAddOption("printer-location", p->location,
+-				  num_options, &options);
++
+       /* Default option settings from printer entry */
+       for (i = 0; i < p->num_options; i ++)
+ 	if (strcasecmp(p->options[i].name, "printer-is-shared"))
+@@ -6360,7 +6361,7 @@ static void
  browse_poll_get_printers (browsepoll_t *context, http_t *conn)
  {
    static const char * const rattrs[] = { "printer-uri-supported",

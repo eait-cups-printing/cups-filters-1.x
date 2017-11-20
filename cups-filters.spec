@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.16.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -272,6 +272,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Nov 20 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.16.1-3
+- fixing patch for upstream issue 1413
+
 * Fri Oct 06 2017 Zdenek Dohnal <zdohnal@redhat.com> - 1.16.1-2
 - upstream 1413 - Propagation of location doesn't work
 
