@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.17.9
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -39,6 +39,7 @@ BuildRequires: libtiff-devel
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(dbus-1)
+BuildRequires: ghostscript
 # libijs
 BuildRequires: pkgconfig(ijs)
 BuildRequires: pkgconfig(freetype2)
@@ -279,6 +280,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Jan 11 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.9-5
+- adding build dependency on ghostscript because of its package changes
+
 * Tue Jan 02 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.9-4
 - 1529680 - set CreateIPPPrintQueues to ALL and LocalRemoteCUPSQueueNaming to RemoteName
 
