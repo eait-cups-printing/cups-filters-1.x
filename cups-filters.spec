@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.17.9
-Release: 5%{?dist}
+Version: 1.19.0
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,8 +20,7 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-Patch01: cups-filters-location.patch
-Patch02: cups-filters-createall.patch
+Patch01: cups-filters-createall.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -105,8 +104,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
-%patch01 -p1 -b .location
-%patch02 -p1 -b .createall
+%patch01 -p1 -b .createall
 
 
 %build
@@ -280,6 +278,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jan 16 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.19.0-1
+- Rebase to 1.19.0
+
 * Thu Jan 11 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.17.9-5
 - adding build dependency on ghostscript because of its package changes
 
