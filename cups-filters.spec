@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -77,14 +77,12 @@ Requires(postun): systemd
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
-Group:   System Environment/Libraries
 # LGPLv2: libcupsfilters
 # MIT:    libfontembed
 License: LGPLv2 and MIT
 
 %package devel
 Summary: OpenPrinting CUPS filters and backends - development environment
-Group:   Development/Libraries
 License: LGPLv2 and MIT
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -278,6 +276,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Feb 08 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-3
+- remove old stuff https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/MRWOMRZ6KPCV25EFHJ2O67BCCP3L4Y6N/
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.20.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
