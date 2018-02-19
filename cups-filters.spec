@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,6 +23,16 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 Patch01: cups-filters-createall.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
+
+# gcc and gcc-c++ is not in buildroot by default
+
+# gcc for backends (implicitclass, parallel, serial, backend error handling)
+# cupsfilters (colord, color manager...), filter (banners, 
+# commandto*, braille, foomatic-rip, imagetoraster, imagetopdf, gstoraster e.g.),
+# fontembed, cups-browsed
+BuildRequires: gcc
+# gcc-c++ for pdftoopvp, pdftopdf
+BuildRequires: gcc-c++
 
 BuildRequires: cups-devel
 BuildRequires: pkgconfig
@@ -276,6 +286,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Feb 19 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-6
+- gcc and gcc-c++ is no longer in buildroot by default
+
 * Wed Feb 14 2018 David Tardon <dtardon@redhat.com> - 1.20.0-5
 - rebuild for poppler 0.62.0
 
