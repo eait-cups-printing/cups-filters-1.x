@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -35,7 +35,7 @@ BuildRequires: gcc
 BuildRequires: gcc-c++
 
 BuildRequires: cups-devel
-BuildRequires: pkgconfig
+BuildRequires: pkgconf-pkg-config
 # pdftopdf
 BuildRequires: pkgconfig(libqpdf)
 # pdftops
@@ -43,7 +43,7 @@ BuildRequires: poppler-utils
 # pdftoijs, pdftoopvp, pdftoraster, gstoraster
 BuildRequires: pkgconfig(poppler)
 BuildRequires: poppler-cpp-devel
-BuildRequires: libjpeg-devel
+BuildRequires: libjpeg-turbo-devel
 BuildRequires: libtiff-devel
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(zlib)
@@ -286,6 +286,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Feb 21 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-7
+- libjpeg is shipped in libjpeg-turbo and pkgconfig in pkgconf-pkg-config
+
 * Mon Feb 19 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-6
 - gcc and gcc-c++ is no longer in buildroot by default
 
