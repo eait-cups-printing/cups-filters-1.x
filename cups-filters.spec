@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -273,8 +273,8 @@ fi
 %dir %{_pkgdocdir}/
 %{_pkgdocdir}/COPYING
 %{_pkgdocdir}/fontembed/README
-%{_libdir}/libcupsfilters.so.*
-%{_libdir}/libfontembed.so.*
+%{_libdir}/libcupsfilters.so.1*
+%{_libdir}/libfontembed.so.1*
 
 %files devel
 %{_includedir}/cupsfilters
@@ -286,6 +286,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Feb 28 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-8
+- add explicit soname -> warning about soname change
+
 * Wed Feb 21 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.0-7
 - libjpeg is shipped in libjpeg-turbo and pkgconfig in pkgconf-pkg-config
 
