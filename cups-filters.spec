@@ -75,7 +75,8 @@ BuildRequires: automake
 BuildRequires: libtool
 
 Requires: cups-filesystem
-Requires: poppler-utils
+# poppler filters (only if enabled) and printing banners
+Recommends: poppler-utils
 
 # texttopdf
 Requires: liberation-mono-fonts
@@ -295,6 +296,7 @@ fi
 * Wed Apr 04 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.2-1
 - 1.20.2
 - fixing discovering of remote CUPS queues and LDAP queues
+- dependency on poppler-utils is now only recommended
 
 * Fri Mar 23 2018 Marek Kasik <mkasik@redhat.com> - 1.20.1-4
 - Rebuild for poppler-0.63.0
