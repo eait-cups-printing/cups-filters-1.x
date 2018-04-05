@@ -22,6 +22,9 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 
 Patch01: cups-filters-createall.patch
 
+# upstream patches, remove with new release
+Patch100: cups-filters-no-txt.patch
+
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
 # gcc and gcc-c++ is not in buildroot by default
@@ -112,8 +115,11 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %prep
 %setup -q
 
+# set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
 %patch01 -p1 -b .createall
 
+# discover remote CUPS queues and LDAP queues (upstream https://github.com/OpenPrinting/cups-filters/issues/34)
+%patch100 -p1 -b .no-txt
 
 %build
 # work-around Rpath
@@ -288,6 +294,7 @@ fi
 %changelog
 * Wed Apr 04 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.2-1
 - 1.20.2
+- fixing discovering of remote CUPS queues and LDAP queues
 
 * Fri Mar 23 2018 Marek Kasik <mkasik@redhat.com> - 1.20.1-4
 - Rebuild for poppler-0.63.0
