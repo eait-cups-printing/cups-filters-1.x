@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.20.2
+Version: 1.20.3
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -21,9 +21,6 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch01: cups-filters-createall.patch
-
-# upstream patches, remove with new release
-Patch100: cups-filters-no-txt.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -118,9 +115,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
 %patch01 -p1 -b .createall
-
-# discover remote CUPS queues and LDAP queues (upstream https://github.com/OpenPrinting/cups-filters/issues/34)
-%patch100 -p1 -b .no-txt
 
 %build
 # work-around Rpath
@@ -293,6 +287,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Apr 13 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-1
+- 1.20.3
+
 * Wed Apr 04 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.2-1
 - 1.20.2
 - fixing discovering of remote CUPS queues and LDAP queues
