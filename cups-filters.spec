@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.3
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -72,8 +72,10 @@ BuildRequires: automake
 BuildRequires: libtool
 
 Requires: cups-filesystem
-# poppler filters (only if enabled) and printing banners
-Recommends: poppler-utils
+# if --with-pdftops is set to hybrid, we use poppler filters for several printers
+# and for printing banners, for other printers we need gs - ghostscript
+Requires: poppler-utils
+Requires: ghostscript
 
 # texttopdf
 Requires: liberation-mono-fonts
@@ -289,6 +291,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jun 12 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-3
+- hybrid pdftops filter requires poppler and ghostscript for run
+
 * Tue Jun 12 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-2
 - cups-browsed needs to have cups.service to run
 
