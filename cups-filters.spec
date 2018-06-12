@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -82,6 +82,8 @@ Requires: liberation-mono-fonts
 Requires: bc grep sed which
 
 # cups-browsed
+# cups-browsed needs to have cups.service to run
+Requires: cups
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
@@ -287,6 +289,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jun 12 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-2
+- cups-browsed needs to have cups.service to run
+
 * Fri Apr 13 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-1
 - 1.20.3
 
