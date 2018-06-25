@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -291,6 +291,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jun 25 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-4
+- rebuilt for new qpdf-8.1.0
+
 * Tue Jun 12 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-3
 - hybrid pdftops filter requires poppler and ghostscript for run
 
