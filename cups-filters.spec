@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -15,7 +15,7 @@ Release: 5%{?dist}
 # GPLv3+:  filters: urftopdf, rastertopdf
 # LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
-License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
+License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with advertising
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
@@ -291,6 +291,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jul 24 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-6
+- correcting license
+
 * Thu Jul 12 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.20.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
