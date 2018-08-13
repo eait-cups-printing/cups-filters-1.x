@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.20.3
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch01: cups-filters-createall.patch
+Patch02: poppler-0.64.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -119,6 +120,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
 %patch01 -p1 -b .createall
+%patch02 -p1 -b .poppler-0.64
 
 %build
 # work-around Rpath
@@ -291,6 +293,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 14 2018 Marek Kasik <mkasik@redhat.com> - 1.20.3-7
+- Rebuild for poppler-0.67.0
+
 * Tue Jul 24 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.20.3-6
 - correcting license
 
