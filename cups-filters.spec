@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.21.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,9 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch01: cups-filters-createall.patch
+# backported patch from upstream - since glibc 2.28 there is a need to clear EOF on 
+# file descriptor when I use dup2 on file descriptor where is EOF
+Patch02: cups-filters-cleareof.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -119,6 +122,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 
 # set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
 %patch01 -p1 -b .createall
+# backported from upstream - EOF from pipe needs to cleared
+%patch02 -p1 -b .cleareof
 
 %build
 # work-around Rpath
@@ -291,6 +296,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Sep 21 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-2
+- 1628255 - cups-filters: Sticky EOF behavior in glibc breaks descriptor concatenation using dup2 (breaks printing)
+
 * Mon Sep 10 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-1
 - 1.21.2
 
