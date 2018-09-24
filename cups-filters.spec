@@ -304,6 +304,7 @@ fi
 %changelog
 * Mon Sep 24 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-3
 - 1632267 - cups-filters needs to obsolete ghostscript-cups and foomatic-filters
+- rebuilt for qpdf-8.2.1
 
 * Fri Sep 21 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-2
 - 1628255 - cups-filters: Sticky EOF behavior in glibc breaks descriptor concatenation using dup2 (breaks printing)
