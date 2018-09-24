@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.21.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -92,6 +92,12 @@ Requires: cups
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
+
+# some installations can have ghostscript-cups or foomatic-filters installed,
+# but they are provided by cups-filters, so we need to obsolete them to have
+# them uninstalled - remove these obsoletes when F31+
+Obsoletes: ghostscript-cups
+Obsoletes: foomatic-filters
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -296,6 +302,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Sep 24 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-3
+- 1632267 - cups-filters needs to obsolete ghostscript-cups and foomatic-filters
+
 * Fri Sep 21 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.2-2
 - 1628255 - cups-filters: Sticky EOF behavior in glibc breaks descriptor concatenation using dup2 (breaks printing)
 
