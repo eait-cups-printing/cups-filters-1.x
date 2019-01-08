@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.21.5
+Version: 1.21.6
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -28,7 +28,6 @@ Patch01: cups-filters-createall.patch
 Patch02: cups-browsed.8.patch 
 # backport from upstream - checking for timeouts were done for disappearing queues,
 # which caused crashes
-Patch03: 0001-cups-browsed-Fixed-crashes-caused-by-checking-HTTP-t.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -135,8 +134,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-# timeouts - backport from upstream
-%patch03 -p1 -b .timeouts
 
 %build
 # work-around Rpath
@@ -309,6 +306,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jan 08 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.6-1
+- 1.21.6
+
 * Thu Dec 13 2018 Zdenek Dohnal <zdohnal@redhat.com> - 1.21.5-1
 - 1.21.5
 
