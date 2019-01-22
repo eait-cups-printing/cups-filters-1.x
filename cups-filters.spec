@@ -233,9 +233,7 @@ fi
 %postun
 %systemd_postun_with_restart cups-browsed.service 
 
-%post libs -p /sbin/ldconfig
-
-%postun libs -p /sbin/ldconfig
+%ldconfig_scriptlets libs
 
 
 %files
