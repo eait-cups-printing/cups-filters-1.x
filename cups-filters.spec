@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -247,7 +247,9 @@ fi
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(0755,root,root) %{_cups_serverbin}/backend/beh
-%attr(0755,root,root) %{_cups_serverbin}/backend/cups-brf
+# cups-brf needs to be run as root, otherwise it leaves error messages
+# in journal
+%attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
 %{_bindir}/foomatic-rip
 %{_bindir}/driverless
 %{_cups_serverbin}/backend/driverless
@@ -304,6 +306,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Feb 01 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.0-4
+- cups-brf needs to be run as root
+
 * Thu Jan 31 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.22.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
