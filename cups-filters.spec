@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.22.0
-Release: 4%{?dist}
+Version: 1.22.3
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,14 +20,13 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
+# set defaults in cups-browsed.conf
 Patch01: cups-filters-createall.patch
 # Links in man page is wrong - it shows 'cups-browsed' in path, but we
 # have 'cups-filters' in path, because it is shipped in 'cups-filters' package
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch 
-# backport from upstream - checking for timeouts were done for disappearing queues,
-# which caused crashes
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -153,6 +152,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # --enable-dbus - enable DBus Connection Manager's code
 # --disable-silent-rules - verbose build output
 # --disable-mutool - mupdf is retired in Fedora, use qpdf
+# --enable-pclm - support for pclm language
 
 %configure --disable-static \
            --disable-silent-rules \
@@ -161,7 +161,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --with-rcdir=no \
            --disable-mutool \
            --enable-driverless \
-           --enable-auto-setup-driverless
+           --enable-auto-setup-driverless \
+           --enable-pclm
 
 make %{?_smp_mflags}
 
@@ -306,6 +307,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Mar 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.3-1
+- 1.22.3
+
 * Fri Feb 01 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.0-4
 - cups-brf needs to be run as root
 
