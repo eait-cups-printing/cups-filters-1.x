@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -202,32 +202,6 @@ make check
 %post
 %systemd_post cups-browsed.service
 
-# Initial installation
-if [ $1 -eq 1 ] ; then
-    IN=%{_sysconfdir}/cups/cupsd.conf
-    OUT=%{_sysconfdir}/cups/cups-browsed.conf
-    keyword=BrowsePoll
-
-    # We can remove this after few releases, it's just for the introduction of cups-browsed.
-    if [ -f "$OUT" ]; then
-        echo -e "\n# NOTE: This file is not part of CUPS.\n# You need to enable cups-browsed service\n# and allow ipp-client service in firewall." >> "$OUT"
-    fi
-
-    # move BrowsePoll from cupsd.conf to cups-browsed.conf
-    if [ -f "$IN" ] && grep -iq ^$keyword "$IN"; then
-        if ! grep -iq ^$keyword "$OUT"; then
-            (cat >> "$OUT" <<EOF
-
-# Settings automatically moved from cupsd.conf by RPM package:
-EOF
-            ) || :
-            (grep -i ^$keyword "$IN" >> "$OUT") || :
-            #systemctl enable cups-browsed.service >/dev/null 2>&1 || :
-        fi
-        sed -i -e "s,^$keyword,#$keyword directive moved to cups-browsed.conf\n#$keyword,i" "$IN" || :
-    fi
-fi
-
 %preun
 %systemd_preun cups-browsed.service
 
@@ -307,6 +281,9 @@ fi
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 07 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-3
+- remove unneeded scriptlet
+
 * Wed Jul 24 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.22.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
