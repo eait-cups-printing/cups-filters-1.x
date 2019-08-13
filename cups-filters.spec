@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,6 +27,9 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch 
+# issue caused by bad covscan fix, strlen() was called on NULL pointer,
+# fixed upstream
+Patch03: cups-filters-foomaticrip-segfault.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -133,6 +136,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
+# 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
+%patch03 -p1 -b .foomaticrip-segfault
 
 %build
 # work-around Rpath
@@ -281,6 +286,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Aug 13 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-4
+- 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
+
 * Wed Aug 07 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-3
 - remove unneeded scriptlet
 
