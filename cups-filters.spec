@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -84,7 +84,11 @@ Requires: cups-filesystem
 # if --with-pdftops is set to hybrid, we use poppler filters for several printers
 # and for printing banners, for other printers we need gs - ghostscript
 Requires: poppler-utils
+# several filters calls 'gs' binary during filtering
 Requires: ghostscript
+
+# for getting ICC profiles for filters (dbus must run)
+Requires: colord
 
 # texttopdf
 Requires: liberation-mono-fonts
@@ -286,6 +290,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Sep 11 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-5
+- require colord, because it is needed for ICC profiles for filters
+
 * Tue Aug 13 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-4
 - 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
 
