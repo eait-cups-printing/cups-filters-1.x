@@ -32,6 +32,8 @@ Patch02: cups-browsed.8.patch
 Patch03: cups-filters-foomaticrip-segfault.patch
 # backported from upstream, do not create encrypted file during filtering
 Patch04: pdftopdf-nocrypt.patch
+# backported from upstream, ftbfs with qpdf-9.0.0
+Patch05: cups-filters-qpdf-9.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -145,6 +147,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
 %patch03 -p1 -b .foomaticrip-segfault
 %patch04 -p1 -b .pdftopdf-nocrypt
+%patch05 -p1 -b .qpdf-9
 
 %build
 # work-around Rpath
@@ -294,6 +297,7 @@ make check
 
 %changelog
 * Tue Sep 17 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-6
+- ftbfs with qpdf-9.0.0
 - pdftopdf output should not be encrypted
 
 * Wed Sep 11 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-5
