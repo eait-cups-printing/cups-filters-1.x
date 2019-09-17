@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -30,6 +30,8 @@ Patch02: cups-browsed.8.patch
 # issue caused by bad covscan fix, strlen() was called on NULL pointer,
 # fixed upstream
 Patch03: cups-filters-foomaticrip-segfault.patch
+# backported from upstream, do not create encrypted file during filtering
+Patch04: pdftopdf-nocrypt.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -142,6 +144,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch02 -p1 -b .manpage
 # 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
 %patch03 -p1 -b .foomaticrip-segfault
+%patch04 -p1 -b .pdftopdf-nocrypt
 
 %build
 # work-around Rpath
@@ -290,6 +293,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Sep 17 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-6
+- pdftopdf output should not be encrypted
+
 * Wed Sep 11 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-5
 - require colord, because it is needed for ICC profiles for filters
 
