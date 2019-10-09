@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -34,6 +34,8 @@ Patch03: cups-filters-foomaticrip-segfault.patch
 Patch04: pdftopdf-nocrypt.patch
 # backported from upstream, ftbfs with qpdf-9.0.0
 Patch05: cups-filters-qpdf-9.patch
+# backported from upstream, gs 9.27 uses now setfilladjust2
+Patch06: cups-filters-setfilladjust.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -148,6 +150,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch03 -p1 -b .foomaticrip-segfault
 %patch04 -p1 -b .pdftopdf-nocrypt
 %patch05 -p1 -b .qpdf-9
+%patch06 -p1 -b .setfilladjust
 
 %build
 # work-around Rpath
@@ -296,6 +299,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Oct 09 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-7
+- gs 9.27 now uses setfilladjust2
+
 * Tue Sep 17 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-6
 - ftbfs with qpdf-9.0.0
 - pdftopdf output should not be encrypted
