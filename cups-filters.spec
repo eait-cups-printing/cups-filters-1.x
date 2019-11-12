@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -36,6 +36,10 @@ Patch04: pdftopdf-nocrypt.patch
 Patch05: cups-filters-qpdf-9.patch
 # backported from upstream, gs 9.27 uses now setfilladjust2
 Patch06: cups-filters-setfilladjust.patch
+# several printers report badly that they have pwg-raster support, but printing
+# pwg-raster does not work. So now apple-raster is preffered when printer reports
+# support of pwg-raster and apple-raster
+Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -151,6 +155,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch04 -p1 -b .pdftopdf-nocrypt
 %patch05 -p1 -b .qpdf-9
 %patch06 -p1 -b .setfilladjust
+%patch07 -p1 -b .prefer-apple-raster
 
 %build
 # work-around Rpath
@@ -299,6 +304,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Oct 22 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-8
+- 1756726 - Epson ET 7700 reports pwg support, but pwg does not work
+
 * Wed Oct 09 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-7
 - gs 9.27 now uses setfilladjust2
 
