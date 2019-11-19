@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 8%{?dist}
+Release: 9%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -304,6 +304,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Nov 19 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-9
+- rebuilt for qpdf-9.1.0
+
 * Tue Oct 22 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-8
 - 1756726 - Epson ET 7700 reports pwg support, but pwg does not work
 
