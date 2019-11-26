@@ -1,0 +1,17 @@
+diff --git a/utils/cups-browsed.c b/utils/cups-browsed.c
+index 1e3ba18..331d587 100644
+--- a/utils/cups-browsed.c
++++ b/utils/cups-browsed.c
+@@ -3475,6 +3475,12 @@ on_job_state (CupsNotifier *object,
+ 	  break;
+       }
+ 
++      if (http)
++      {
++          httpClose(http);
++          http = NULL;
++      }  
++
+       /* Write the selected destination host into an option of our implicit
+ 	 class queue (cups-browsed-dest-printer="<dest>") so that the
+ 	 implicitclass backend will pick it up */

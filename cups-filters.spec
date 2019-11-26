@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 9%{?dist}
+Release: 10%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -40,6 +40,8 @@ Patch06: cups-filters-setfilladjust.patch
 # pwg-raster does not work. So now apple-raster is preffered when printer reports
 # support of pwg-raster and apple-raster
 Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
+# 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
+Patch08: cups-browsed-socket-leak.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -78,6 +80,8 @@ BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
+# for test suite
+BuildRequires: cups-ipptool
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python3-cups
@@ -156,6 +160,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch05 -p1 -b .qpdf-9
 %patch06 -p1 -b .setfilladjust
 %patch07 -p1 -b .prefer-apple-raster
+%patch08 -p1 -b .socket-leak
 
 %build
 # work-around Rpath
@@ -304,6 +309,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Nov 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-10
+- 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
+
 * Tue Nov 19 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-9
 - rebuilt for qpdf-9.1.0
 
