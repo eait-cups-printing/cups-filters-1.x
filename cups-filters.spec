@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.22.5
-Release: 10%{?dist}
+Version: 1.26.0
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,21 +27,6 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch 
-# issue caused by bad covscan fix, strlen() was called on NULL pointer,
-# fixed upstream
-Patch03: cups-filters-foomaticrip-segfault.patch
-# backported from upstream, do not create encrypted file during filtering
-Patch04: pdftopdf-nocrypt.patch
-# backported from upstream, ftbfs with qpdf-9.0.0
-Patch05: cups-filters-qpdf-9.patch
-# backported from upstream, gs 9.27 uses now setfilladjust2
-Patch06: cups-filters-setfilladjust.patch
-# several printers report badly that they have pwg-raster support, but printing
-# pwg-raster does not work. So now apple-raster is preffered when printer reports
-# support of pwg-raster and apple-raster
-Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
-# 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
-Patch08: cups-browsed-socket-leak.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -92,6 +77,7 @@ BuildRequires: dejavu-sans-fonts
 # autogen.sh
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: gettext-devel
 BuildRequires: libtool
 
 Requires: cups-filesystem
@@ -116,12 +102,6 @@ Requires: cups
 Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
-
-# some installations can have ghostscript-cups or foomatic-filters installed,
-# but they are provided by cups-filters, so we need to obsolete them to have
-# them uninstalled - remove these obsoletes when F31+
-Obsoletes: ghostscript-cups
-Obsoletes: foomatic-filters
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -154,13 +134,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-# 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
-%patch03 -p1 -b .foomaticrip-segfault
-%patch04 -p1 -b .pdftopdf-nocrypt
-%patch05 -p1 -b .qpdf-9
-%patch06 -p1 -b .setfilladjust
-%patch07 -p1 -b .prefer-apple-raster
-%patch08 -p1 -b .socket-leak
 
 %build
 # work-around Rpath
@@ -241,6 +214,7 @@ make check
 
 %files
 %{_pkgdocdir}/README
+%{_pkgdocdir}/ABOUT-NLS
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
@@ -309,6 +283,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Dec 16 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.26.0-1
+- 1.26.0
+
 * Tue Nov 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-10
 - 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
 
