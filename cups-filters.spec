@@ -203,6 +203,23 @@ make check
 %post
 %systemd_post cups-browsed.service
 
+# put UpdateCUPSQueuesMaxPerCall and PauseBetweenCUPSQueueUpdates into cups-browsed.conf
+# for making cups-browsed work more stable for environments with many print queues
+# remove this after 1-2 releases
+for directive in "UpdateCUPSQueuesMaxPerCall" "PauseBetweenCUPSQueueUpdates"
+do
+    found=`%{_bindir}/grep "^[[:blank:]]*$directive" %{_sysconfdir}/cups/cups-browsed.conf`
+    if [ -z "$found" ]
+    then
+        if [ "x$directive" == "xUpdateCUPSQueuesMaxPerCall" ]
+        then
+            %{_bindir}/echo "UpdateCUPSQueuesMaxPerCall 20" >> %{_sysconfdir}/cups/cups-browsed.conf
+        else
+            %{_bindir}/echo "PauseBetweenCUPSQueueUpdates 5" >> %{_sysconfdir}/cups/cups-browsed.conf
+        fi
+    fi
+done
+
 %preun
 %systemd_preun cups-browsed.service
 
@@ -285,6 +302,7 @@ make check
 %changelog
 * Mon Dec 16 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.26.0-1
 - 1.26.0
+- add post scriptlet for update
 
 * Tue Nov 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-10
 - 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
