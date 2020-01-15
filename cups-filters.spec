@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 10%{?dist}
+Release: 11%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -93,6 +93,9 @@ BuildRequires: dejavu-sans-fonts
 BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: libtool
+
+# needed for systemd rpm macros in scriptlets
+BuildRequires: systemd-rpm-macros
 
 Requires: cups-filesystem
 # if --with-pdftops is set to hybrid, we use poppler filters for several printers
@@ -309,6 +312,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jan 15 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-11
+- add buildrequires fro systemd-rpm-macros
+
 * Tue Nov 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-10
 - 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
 
