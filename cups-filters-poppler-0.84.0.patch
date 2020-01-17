@@ -1,0 +1,42 @@
+--- cups-filters-1.22.5/filter/pdftoijs.cxx
++++ cups-filters-1.22.5/filter/pdftoijs.cxx
+@@ -286,7 +286,7 @@ int main(int argc, char *argv[]) {
+   bool reverseVideo;
+ 
+   setErrorCallback(::myErrorFun,NULL);
+-  globalParams = new GlobalParams();
++  globalParams = std::make_unique<GlobalParams>();
+   parseOpts(argc, argv);
+ 
+   if (argc == 6) {
+--- cups-filters-1.22.5/filter/pdftoopvp/pdftoopvp.cxx.orig	2019-04-07 17:00:58.000000000 +0200
++++ cups-filters-1.22.5/filter/pdftoopvp/pdftoopvp.cxx	2020-01-03 17:56:44.571862630 +0100
+@@ -605,7 +605,7 @@ exit(0);
+   }
+ 
+   // read config file
+-  globalParams = new GlobalParams();
++  globalParams = std::make_unique<GlobalParams>();
+   if (enableFreeTypeStr[0]) {
+     if (!globalParams->setEnableFreeType(enableFreeTypeStr)) {
+       opvpError(-1,"Bad '-freetype' value on command line");
+@@ -766,7 +766,7 @@ err2:
+  err05:
+   delete doc;
+  err0:
+-  delete globalParams;
++  globalParams.reset();
+ 
+ #if POPPLER_VERSION_MAJOR == 0 && POPPLER_VERSION_MINOR < 69
+   // check for memory leaks
+--- cups-filters-1.22.5/filter/pdftoraster.cxx.orig	2019-04-07 17:00:58.000000000 +0200
++++ cups-filters-1.22.5/filter/pdftoraster.cxx	2020-01-03 17:56:05.477767380 +0100
+@@ -1958,7 +1958,7 @@ int main(int argc, char *argv[]) {
+ 
+   setErrorCallback(::myErrorFun,NULL);
+   cmsSetLogErrorHandler(lcmsErrorHandler);
+-  globalParams = new GlobalParams();
++  globalParams = std::make_unique<GlobalParams>();
+   parseOpts(argc, argv);
+ 
+   if (argc == 6) {

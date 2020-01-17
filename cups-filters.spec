@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 11%{?dist}
+Release: 12%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -42,6 +42,8 @@ Patch06: cups-filters-setfilladjust.patch
 Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
 # 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
 Patch08: cups-browsed-socket-leak.patch
+
+Patch09: cups-filters-poppler-0.84.0.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -164,6 +166,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch06 -p1 -b .setfilladjust
 %patch07 -p1 -b .prefer-apple-raster
 %patch08 -p1 -b .socket-leak
+%patch09 -p1 -b .poppler-0.84.0
 
 %build
 # work-around Rpath
@@ -312,6 +315,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Jan 17 2020 Marek Kasik <mkasik@redhat.com> - 1.22.5-11
+- Rebuild for poppler-0.84.0
+
 * Wed Jan 15 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-11
 - add buildrequires fro systemd-rpm-macros
 
