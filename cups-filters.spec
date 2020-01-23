@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.22.5
-Release: 12%{?dist}
+Release: 13%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -42,8 +42,11 @@ Patch06: cups-filters-setfilladjust.patch
 Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
 # 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
 Patch08: cups-browsed-socket-leak.patch
-
-Patch09: cups-filters-poppler-0.84.0.patch
+# built with gcc 10
+Patch09: 0001-foomatic-rip-fix-compilation-with-fno-common.patch
+# backported from upstream, current code of pdftoraster, backported
+# because of FTBFS with new gcc otherwise
+Patch10: cups-filters-upstream-pdftoraster.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -122,12 +125,6 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-# some installations can have ghostscript-cups or foomatic-filters installed,
-# but they are provided by cups-filters, so we need to obsolete them to have
-# them uninstalled - remove these obsoletes when F31+
-Obsoletes: ghostscript-cups
-Obsoletes: foomatic-filters
-
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 # LGPLv2: libcupsfilters
@@ -166,7 +163,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch06 -p1 -b .setfilladjust
 %patch07 -p1 -b .prefer-apple-raster
 %patch08 -p1 -b .socket-leak
-%patch09 -p1 -b .poppler-0.84.0
+%patch09 -p1 -b .gcc10
+%patch10 -p1 -b .pdftoraster
 
 %build
 # work-around Rpath
@@ -315,6 +313,9 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Jan 22 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-13
+- fix build with GCC 10 and remove old obsoletes
+
 * Fri Jan 17 2020 Marek Kasik <mkasik@redhat.com> - 1.22.5-11
 - Rebuild for poppler-0.84.0
 
