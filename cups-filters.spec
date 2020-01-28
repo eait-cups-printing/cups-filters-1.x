@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.26.0
+Version: 1.27.0
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -236,11 +236,13 @@ done
 %{_pkgdocdir}/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
-%attr(0755,root,root) %{_cups_serverbin}/backend/parallel
+# all backends needs to be run only as root because of kerberos
+%attr(0700,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
-%attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
-%attr(0755,root,root) %{_cups_serverbin}/backend/beh
+# implicitclass backend must be run as root
+%attr(0700,root,root) %{_cups_serverbin}/backend/implicitclass
+%attr(0700,root,root) %{_cups_serverbin}/backend/beh
 # cups-brf needs to be run as root, otherwise it leaves error messages
 # in journal
 %attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
@@ -300,8 +302,8 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
-* Mon Dec 16 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.26.0-1
-- 1.26.0
+* Tue Jan 28 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.0-1
+- 1.27.0
 - add post scriptlet for update
 
 * Tue Nov 26 2019 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-10
