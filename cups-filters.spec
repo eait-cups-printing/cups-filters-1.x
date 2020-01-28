@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.22.5
-Release: 13%{?dist}
+Version: 1.27.0
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,26 +27,6 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch 
-# issue caused by bad covscan fix, strlen() was called on NULL pointer,
-# fixed upstream
-Patch03: cups-filters-foomaticrip-segfault.patch
-# backported from upstream, do not create encrypted file during filtering
-Patch04: pdftopdf-nocrypt.patch
-# backported from upstream, ftbfs with qpdf-9.0.0
-Patch05: cups-filters-qpdf-9.patch
-# backported from upstream, gs 9.27 uses now setfilladjust2
-Patch06: cups-filters-setfilladjust.patch
-# several printers report badly that they have pwg-raster support, but printing
-# pwg-raster does not work. So now apple-raster is preffered when printer reports
-# support of pwg-raster and apple-raster
-Patch07: 0001-libcupsfilters-In-generated-PPDs-prefer-Apple-Raster.patch
-# 1776271 - Updated cups-browsed in RHEL 7.7 leaks sockets
-Patch08: cups-browsed-socket-leak.patch
-# built with gcc 10
-Patch09: 0001-foomatic-rip-fix-compilation-with-fno-common.patch
-# backported from upstream, current code of pdftoraster, backported
-# because of FTBFS with new gcc otherwise
-Patch10: cups-filters-upstream-pdftoraster.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -97,6 +77,7 @@ BuildRequires: dejavu-sans-fonts
 # autogen.sh
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: gettext-devel
 BuildRequires: libtool
 
 # needed for systemd rpm macros in scriptlets
@@ -156,15 +137,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-# 1740122 - foomatic-rip segfaults when env variable PRINTER is not defined
-%patch03 -p1 -b .foomaticrip-segfault
-%patch04 -p1 -b .pdftopdf-nocrypt
-%patch05 -p1 -b .qpdf-9
-%patch06 -p1 -b .setfilladjust
-%patch07 -p1 -b .prefer-apple-raster
-%patch08 -p1 -b .socket-leak
-%patch09 -p1 -b .gcc10
-%patch10 -p1 -b .pdftoraster
 
 %build
 # work-around Rpath
@@ -234,6 +206,23 @@ make check
 %post
 %systemd_post cups-browsed.service
 
+# put UpdateCUPSQueuesMaxPerCall and PauseBetweenCUPSQueueUpdates into cups-browsed.conf
+# for making cups-browsed work more stable for environments with many print queues
+# remove this after 1-2 releases
+for directive in "UpdateCUPSQueuesMaxPerCall" "PauseBetweenCUPSQueueUpdates"
+do
+    found=`%{_bindir}/grep "^[[:blank:]]*$directive" %{_sysconfdir}/cups/cups-browsed.conf`
+    if [ -z "$found" ]
+    then
+        if [ "x$directive" == "xUpdateCUPSQueuesMaxPerCall" ]
+        then
+            %{_bindir}/echo "UpdateCUPSQueuesMaxPerCall 20" >> %{_sysconfdir}/cups/cups-browsed.conf
+        else
+            %{_bindir}/echo "PauseBetweenCUPSQueueUpdates 5" >> %{_sysconfdir}/cups/cups-browsed.conf
+        fi
+    fi
+done
+
 %preun
 %systemd_preun cups-browsed.service
 
@@ -245,15 +234,18 @@ make check
 
 %files
 %{_pkgdocdir}/README
+%{_pkgdocdir}/ABOUT-NLS
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(0755,root,root) %{_cups_serverbin}/filter/*
-%attr(0755,root,root) %{_cups_serverbin}/backend/parallel
+# all backends needs to be run only as root because of kerberos
+%attr(0700,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
-%attr(0755,root,root) %{_cups_serverbin}/backend/implicitclass
-%attr(0755,root,root) %{_cups_serverbin}/backend/beh
+# implicitclass backend must be run as root
+%attr(0700,root,root) %{_cups_serverbin}/backend/implicitclass
+%attr(0700,root,root) %{_cups_serverbin}/backend/beh
 # cups-brf needs to be run as root, otherwise it leaves error messages
 # in journal
 %attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
@@ -313,6 +305,10 @@ make check
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Jan 28 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.0-1
+- 1.27.0
+- add post scriptlet for update
+
 * Wed Jan 22 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.22.5-13
 - fix build with GCC 10 and remove old obsoletes
 
