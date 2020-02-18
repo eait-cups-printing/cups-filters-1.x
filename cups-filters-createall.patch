@@ -10,12 +10,3 @@ diff -up cups-filters-1.16.1/utils/cups-browsed.conf.in.createall cups-filters-1
  # LocalQueueNamingIPPPrinter DNS-SD
  # LocalQueueNamingIPPPrinter MakeModel
  
-@@ -453,7 +453,7 @@ BrowseRemoteProtocols @BROWSEREMOTEPROTO
- # CreateIPPPrinterQueues AppleRaster
- # CreateIPPPrinterQueues Everywhere AppleRaster
- # CreateIPPPrinterQueues Driverless
--# CreateIPPPrinterQueues All
-+CreateIPPPrinterQueues All
- 
- 
- # If cups-browsed is automatically creating print queues for native
