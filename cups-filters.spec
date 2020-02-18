@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,6 +27,9 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch 
+# crash on uninitialized string
+# reported upstream https://github.com/OpenPrinting/cups-filters/pull/204
+Patch03: cups-filters-abrt.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -137,6 +140,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
+# crash in cups-browsed
+%patch03 -p1 -b .abrt
 
 %build
 # work-around Rpath
@@ -305,6 +310,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Feb 17 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.0-2
+- 1802969 - Service "cups-browsed" is crashing all the time
+
 * Tue Jan 28 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.0-1
 - 1.27.0
 - add post scriptlet for update
