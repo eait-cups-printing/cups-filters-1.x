@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -30,6 +30,7 @@ Patch02: cups-browsed.8.patch
 # crash on uninitialized string
 # reported upstream https://github.com/OpenPrinting/cups-filters/pull/204
 Patch03: cups-filters-abrt.patch
+Patch04: foomatic-rip-fix-empty-output.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -142,6 +143,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch02 -p1 -b .manpage
 # crash in cups-browsed
 %patch03 -p1 -b .abrt
+%patch04 -p1 -b .empty-output
 
 %build
 # work-around Rpath
@@ -310,6 +312,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Feb 25 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.1-2
+- 1806862 - foomatic-rip handles empty files in bad way
+
 * Tue Feb 18 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.1-1
 - 1.27.1
 
