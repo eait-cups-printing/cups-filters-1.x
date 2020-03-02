@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.27.1
-Release: 2%{?dist}
+Version: 1.27.2
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -26,11 +26,10 @@ Patch01: cups-filters-createall.patch
 # have 'cups-filters' in path, because it is shipped in 'cups-filters' package
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
-Patch02: cups-browsed.8.patch 
-# crash on uninitialized string
-# reported upstream https://github.com/OpenPrinting/cups-filters/pull/204
-Patch03: cups-filters-abrt.patch
-Patch04: foomatic-rip-fix-empty-output.patch
+Patch02: cups-browsed.8.patch
+# Segfaults in test suite when test font is missing
+# https://github.com/OpenPrinting/cups-filters/pull/214
+Patch03: 0001-Fix-segfaults-in-test-suite-when-test-font-is-missin.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -141,9 +140,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-# crash in cups-browsed
-%patch03 -p1 -b .abrt
-%patch04 -p1 -b .empty-output
+%patch03 -p1 -b .fontemb
 
 %build
 # work-around Rpath
@@ -153,8 +150,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 #                         Brother, Minolta, and Konica Minolta to work around
 #                         bugs in the printer's PS interpreters
 # --with-rcdir=no - don't install SysV init script
-# --enable-auto-setup-driverless - enable automatic setup of IPP network printers
-#                                  with driverless support
 # --enable-driverless - enable PPD generator for driverless printing in 
 #                       /usr/lib/cups/driver, it is for manual setup of 
 #                       driverless printers with printer setup tool
@@ -172,7 +167,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --with-rcdir=no \
            --disable-mutool \
            --enable-driverless \
-           --enable-auto-setup-driverless \
+           --with-test-font-path=/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf \
            --enable-pclm
 
 make %{?_smp_mflags}
@@ -312,6 +307,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Mar 02 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.2-1
+- 1.27.2
+
 * Tue Feb 25 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.1-2
 - 1806862 - foomatic-rip handles empty files in bad way
 

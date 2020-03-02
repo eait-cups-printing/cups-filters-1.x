@@ -1,0 +1,121 @@
+From 1d66106e5ae45407b01459cb112ee09752166dba Mon Sep 17 00:00:00 2001
+From: Zdenek Dohnal <zdohnal@redhat.com>
+Date: Mon, 2 Mar 2020 14:56:55 +0100
+Subject: [PATCH] Fix segfaults in test suite when test font is missing
+
+---
+ configure.ac             | 3 +++
+ filter/test_pdf2.c       | 8 +++++++-
+ fontembed/test_analyze.c | 9 ++++++++-
+ fontembed/test_pdf.c     | 8 +++++++-
+ fontembed/test_ps.c      | 8 +++++++-
+ 5 files changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index d5fe836c..7ffb6693 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -788,6 +788,9 @@ AC_ARG_WITH([test-font-path],
+ 	[with_test_font_path="$withval"],
+ 	[with_test_font_path="/usr/share/fonts/dejavu/DejaVuSans.ttf"]
+ )
++AC_CHECK_FILE("$with_test_font_path", [], [
++	AC_MSG_ERROR([Requested font file is missing. Please install a package providing it.])
++])
+ AC_DEFINE_UNQUOTED([TESTFONT], ["$with_test_font_path"], [Path to font used in tests])
+ 
+ # ================
+diff --git a/filter/test_pdf2.c b/filter/test_pdf2.c
+index a0c1d8b0..3d58a59d 100644
+--- a/filter/test_pdf2.c
++++ b/filter/test_pdf2.c
+@@ -41,12 +41,18 @@ int main()
+ 
+   // font, pt.1 
+   const char *fn=TESTFONT;
++  OTF_FILE *otf=NULL;
+ /*
+   if (argc==2) {
+     fn=argv[1];
+   }
+ */
+-  OTF_FILE *otf=otf_load(fn);
++  otf=otf_load(fn);
++  if (!otf)
++  {
++    printf("Font %s was not loaded, exiting.\n", TESTFONT);
++    return 1;
++  }
+   assert(otf);
+   FONTFILE *ff=fontfile_open_sfnt(otf);
+   EMB_PARAMS *emb=emb_new(ff,
+diff --git a/fontembed/test_analyze.c b/fontembed/test_analyze.c
+index 3f42573d..967a7516 100644
+--- a/fontembed/test_analyze.c
++++ b/fontembed/test_analyze.c
+@@ -183,10 +183,17 @@ void show_hmtx(OTF_FILE *otf) // {{{
+ int main(int argc,char **argv)
+ {
+   const char *fn=TESTFONT;
++  OTF_FILE *otf=NULL;
+   if (argc==2) {
+     fn=argv[1];
+   }
+-  OTF_FILE *otf=otf_load(fn);
++  otf=otf_load(fn);
++  if (!otf)
++  {
++    printf("Font %s was not loaded, exiting.\n", TESTFONT);
++    return 1;
++  }
++
+   assert(otf);
+   if (otf->numTTC) {
+     printf("TTC has %d fonts, using %d\n",otf->numTTC,otf->useTTC);
+diff --git a/fontembed/test_pdf.c b/fontembed/test_pdf.c
+index 565fd59f..881a4dca 100644
+--- a/fontembed/test_pdf.c
++++ b/fontembed/test_pdf.c
+@@ -72,10 +72,16 @@ static inline void write_string(FILE *f,EMB_PARAMS *emb,const char *str) // {{{
+ int main(int argc,char **argv)
+ {
+   const char *fn=TESTFONT;
++  OTF_FILE *otf=NULL;
+   if (argc==2) {
+     fn=argv[1];
+   }
+-  OTF_FILE *otf=otf_load(fn);
++  otf=otf_load(fn);
++  if (!otf)
++  {
++    printf("Font %s was not loaded, exiting.\n", TESTFONT);
++    return 1;
++  }
+   assert(otf);
+   FONTFILE *ff=fontfile_open_sfnt(otf);
+   EMB_PARAMS *emb=emb_new(ff,
+diff --git a/fontembed/test_ps.c b/fontembed/test_ps.c
+index 1f8c2bb7..688d9392 100644
+--- a/fontembed/test_ps.c
++++ b/fontembed/test_ps.c
+@@ -45,10 +45,16 @@ static inline void write_string(FILE *f,EMB_PARAMS *emb,const char *str) // {{{
+ int main(int argc,char **argv)
+ {
+   const char *fn=TESTFONT;
++  OTF_FILE *otf=NULL;
+   if (argc==2) {
+     fn=argv[1];
+   }
+-  OTF_FILE *otf=otf_load(fn);
++  otf=otf_load(fn);
++  if (!otf)
++  {
++    printf("Font %s was not loaded, exiting.\n", TESTFONT);
++    return 1;
++  }
+   assert(otf);
+   FONTFILE *ff=fontfile_open_sfnt(otf);
+   EMB_PARAMS *emb=emb_new(ff,
+-- 
+2.21.1
+
