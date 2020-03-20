@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -30,6 +30,7 @@ Patch02: cups-browsed.8.patch
 # Segfaults in test suite when test font is missing
 # https://github.com/OpenPrinting/cups-filters/pull/214
 Patch03: 0001-Fix-segfaults-in-test-suite-when-test-font-is-missin.patch
+Patch04: cups-browsed-leaks.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -109,6 +110,10 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
+# cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
+# or device during discovery
+Requires: nss-mdns
+
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
 # LGPLv2: libcupsfilters
@@ -141,6 +146,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # links in manpage
 %patch02 -p1 -b .manpage
 %patch03 -p1 -b .fontemb
+%patch04 -p1 -b .memleaks
 
 %build
 # work-around Rpath
@@ -307,6 +313,10 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Mar 13 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.2-2
+- fix leaks in cups-browsed
+- add require on nss-mdns
+
 * Mon Mar 02 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.2-1
 - 1.27.2
 
