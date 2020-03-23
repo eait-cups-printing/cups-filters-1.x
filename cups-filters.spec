@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.27.2
-Release: 2%{?dist}
+Version: 1.27.3
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,10 +27,6 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch
-# Segfaults in test suite when test font is missing
-# https://github.com/OpenPrinting/cups-filters/pull/214
-Patch03: 0001-Fix-segfaults-in-test-suite-when-test-font-is-missin.patch
-Patch04: cups-browsed-leaks.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -145,8 +141,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-%patch03 -p1 -b .fontemb
-%patch04 -p1 -b .memleaks
 
 %build
 # work-around Rpath
@@ -173,7 +167,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --with-rcdir=no \
            --disable-mutool \
            --enable-driverless \
-           --with-test-font-path=/usr/share/fonts/dejavu-sans-fonts/DejaVuSans.ttf \
            --enable-pclm
 
 make %{?_smp_mflags}
@@ -313,6 +306,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Mar 23 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.3-1
+- 1.27.3
+
 * Fri Mar 13 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.2-2
 - fix leaks in cups-browsed
 - add require on nss-mdns
