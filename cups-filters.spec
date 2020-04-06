@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -107,8 +107,10 @@ Requires(preun): systemd
 Requires(postun): systemd
 
 # cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
-# or device during discovery
-Requires: nss-mdns
+# or device during discovery for newer (2012+) devices - make it recommended together
+# with avahi - needed for device discovery as well
+Recommends: nss-mdns
+Recommends: avahi
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -306,6 +308,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Apr 06 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.3-2
+- make nss-mdns and avahi recommended
+
 * Mon Mar 23 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.3-1
 - 1.27.3
 
