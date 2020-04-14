@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.27.3
-Release: 3%{?dist}
+Version: 1.27.4
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -27,8 +27,6 @@ Patch01: cups-filters-createall.patch
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
 # so cups-browsed would have separate sub package, so the link would be correct
 Patch02: cups-browsed.8.patch
-# memory issue in cups-browsed, backported from upstream
-Patch03: cups-browsed-mem-issues.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -145,8 +143,6 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch01 -p1 -b .createall
 # links in manpage
 %patch02 -p1 -b .manpage
-# memory issues in cups-browsed, backported from upstream
-%patch03 -p1 -b .mem-issues
 
 %build
 # work-around Rpath
@@ -312,6 +308,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Apr 14 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.4-1
+- 1.27.4
+
 * Wed Apr 08 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.3-3
 - memory issues in cups-browsed
 
