@@ -1,0 +1,162 @@
+diff --git a/NEWS b/NEWS
+index c2fce749..24d888ce 100644
+--- a/NEWS
++++ b/NEWS
+@@ -3,12 +3,6 @@ NEWS - OpenPrinting CUPS Filters v1.27.5 - 2020-06-05
+ 
+ CHANGES IN V1.27.5
+ 
+-	- cups-browsed: Do not remove the created local queues on
+-	  shutdown, to avoid their re-creation on restart, so that
+-	  desktops get no cluttered with notifications of new queues
+-	  being created. One can return to the old behavior via
+-	  "KeepGeneratedQueuesOnShutdown No" in cups-browsed.conf
+-	  (Ubuntu bug #1869981, #1878241).
+ 	- cups-browsed: Do not accept DNS-SD broadcasts of IPPS type
+ 	  of "remote" CUPS queues of another CUPS instance on the
+ 	  local machine. This way we get a local queue pointing to
+diff --git a/utils/cups-browsed.c b/utils/cups-browsed.c
+index 7ca6724c..dca3972f 100644
+--- a/utils/cups-browsed.c
++++ b/utils/cups-browsed.c
+@@ -456,7 +456,6 @@ static create_ipp_printer_queues_t CreateIPPPrinterQueues = IPP_PRINTERS_DRIVERL
+ static create_ipp_printer_queues_t CreateIPPPrinterQueues = IPP_PRINTERS_ALL;
+ #endif
+ #endif
+-static unsigned int KeepGeneratedQueuesOnShutdown = 1;
+ static ipp_queue_type_t IPPPrinterQueueType = PPD_YES;
+ static int NewIPPPrinterQueuesShared = 0;
+ static int AutoClustering = 1;
+@@ -10200,17 +10199,9 @@ void avahi_browser_shutdown() {
+     for (p = (remote_printer_t *)cupsArrayFirst(remote_printers);
+ 	 p; p = (remote_printer_t *)cupsArrayNext(remote_printers)) {
+       if (p->type && p->type[0]) {
+-	if (KeepGeneratedQueuesOnShutdown) {
+-	  if (p->status != STATUS_TO_BE_RELEASED &&
+-	      p->status != STATUS_DISAPPEARED) {
+-	    p->status = STATUS_UNCONFIRMED;
+-	    p->timeout = time(NULL) + TIMEOUT_CONFIRM;
+-	  }
+-	} else {
+-	  if (p->status != STATUS_TO_BE_RELEASED)
+-	    p->status = STATUS_DISAPPEARED;
+-	  p->timeout = time(NULL) + TIMEOUT_IMMEDIATELY;
+-	}
++	if (p->status != STATUS_TO_BE_RELEASED)
++	  p->status = STATUS_DISAPPEARED;
++	p->timeout = time(NULL) + TIMEOUT_IMMEDIATELY;
+       }
+     }
+     if (in_shutdown == 0)
+@@ -11645,13 +11636,6 @@ read_configuration (const char *filename)
+       else if (!strcasecmp(value, "no") || !strcasecmp(value, "false") ||
+ 	       !strcasecmp(value, "off") || !strcasecmp(value, "0"))
+ 	NewBrowsePollQueuesShared = 0;
+-    } else if (!strcasecmp(line, "KeepGeneratedQueuesOnShutdown") && value) {
+-      if (!strcasecmp(value, "yes") || !strcasecmp(value, "true") ||
+-	  !strcasecmp(value, "on") || !strcasecmp(value, "1"))
+-	KeepGeneratedQueuesOnShutdown = 1;
+-      else if (!strcasecmp(value, "no") || !strcasecmp(value, "false") ||
+-	       !strcasecmp(value, "off") || !strcasecmp(value, "0"))
+-	KeepGeneratedQueuesOnShutdown = 0;
+     } else if (!strcasecmp(line, "AutoClustering") && value) {
+       if (!strcasecmp(value, "yes") || !strcasecmp(value, "true") ||
+ 	  !strcasecmp(value, "on") || !strcasecmp(value, "1"))
+@@ -12444,13 +12428,12 @@ fail:
+     g_object_unref (proxy);
+ 
+   /* Remove all queues which we have set up */
+-  if (KeepGeneratedQueuesOnShutdown == 0)
+-    for (p = (remote_printer_t *)cupsArrayFirst(remote_printers);
+-	 p; p = (remote_printer_t *)cupsArrayNext(remote_printers)) {
+-      if (p->status != STATUS_TO_BE_RELEASED)
+-	p->status = STATUS_DISAPPEARED;
+-      p->timeout = time(NULL) + TIMEOUT_IMMEDIATELY;
+-    }
++  for (p = (remote_printer_t *)cupsArrayFirst(remote_printers);
++       p; p = (remote_printer_t *)cupsArrayNext(remote_printers)) {
++    if (p->status != STATUS_TO_BE_RELEASED)
++      p->status = STATUS_DISAPPEARED;
++    p->timeout = time(NULL) + TIMEOUT_IMMEDIATELY;
++  }
+   update_cups_queues(NULL);
+ 
+   cancel_subscription (subscription_id);
+diff --git a/utils/cups-browsed.conf.5 b/utils/cups-browsed.conf.5
+index 8ef649fd..99ed3796 100644
+--- a/utils/cups-browsed.conf.5
++++ b/utils/cups-browsed.conf.5
+@@ -732,27 +732,6 @@ not to share newly discovered IPP printers.
+ .fam C
+         NewIPPPrinterQueuesShared Yes
+ 
+-.fam T
+-.fi
+-How to handle the print queues cups-browsed creates when cups-browsed
+-is shut down:
+-.PP
+-"KeepGeneratedQueuesOnShutdown No" makes the queues being
+-removed. This makes sense as these queues only work while cups-browsed
+-is running. cups-browsed has to determine to which member printer of a
+-cluster to pass on the job.
+-.PP
+-"KeepGeneratedQueuesOnShutdown Yes" (the default) makes the queues not
+-being removed. This is the recommended setting for a system where
+-cups-browsed is permanently running and only stopped for short times
+-(like log rotation) or on shutdown. This avoids the re-creation of the
+-queues when cups-browsed is restarted, which often causes a clutter of
+-CUPS notifications on the desktop.
+-.PP
+-.nf
+-.fam C
+-        KeepGeneratedQueuesOnShutdown No
+-
+ .fam T
+ .fi
+ If there is more than one remote CUPS printer whose local queue
+@@ -869,7 +848,7 @@ local queue named "LJ4050":
+ .fi
+ As DNS-SD service names are unique in a network you can create a
+ cluster from exactly specified printers (spaces replaced by
+-underscores):
++underscors):
+ .PP
+ .nf
+ .fam C
+diff --git a/utils/cups-browsed.conf.in b/utils/cups-browsed.conf.in
+index 7e248c51..ca4371fe 100644
+--- a/utils/cups-browsed.conf.in
++++ b/utils/cups-browsed.conf.in
+@@ -552,23 +552,6 @@ BrowseRemoteProtocols @BROWSEREMOTEPROTOCOLS@
+ # NewIPPPrinterQueuesShared Yes
+ 
+ 
+-# How to handle the print queues cups-browsed creates when
+-# cups-browsed is shut down:
+-
+-# "KeepGeneratedQueuesOnShutdown No" makes the queues being
+-# removed. This makes sense as these queues only work while
+-# cups-browsed is running. cups-browsed has to determine to which
+-# member printer of a cluster to pass on the job.
+-
+-# "KeepGeneratedQueuesOnShutdown Yes" (the default) makes the queues
+-# not being removed. This is the recommended setting for a system
+-# where cups-browsed is permanently running and only stopped for short
+-# times (like log rotation) or on shutdown. This avoids the
+-# re-creation of the queues when cups-browsed is restarted, which
+-# often causes a clutter of CUPS notifications on the desktop.
+-
+-# KeepGeneratedQueuesOnShutdown No
+-
+ # If there is more than one remote CUPS printer whose local queue
+ # would get the same name and AutoClustering is set to "Yes" (the
+ # default) only one local queue is created which makes up a
+@@ -664,7 +647,7 @@ BrowseRemoteProtocols @BROWSEREMOTEPROTOCOLS@
+ 
+ # As DNS-SD service names are unique in a network you can create a
+ # cluster from exactly specified printers (spaces replaced by
+-# underscores):
++# underscors):
+ 
+ # Cluster hrdep: oldlaser_@_hr-server1 newlaser_@_hr-server2
+ 
