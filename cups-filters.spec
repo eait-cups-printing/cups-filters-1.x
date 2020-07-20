@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -30,6 +30,8 @@ Patch02: cups-browsed.8.patch
 # upstream decided on keep queues after restart - IMO it causes more issues than it
 # solves https://github.com/OpenPrinting/cups-filters/issues/241
 Patch03: cups-filters-remove-queues-on-restart.patch
+# backported from upstream, copies were ignored because typo in ppdgenerator
+Patch04: cups-filters-manual-copies.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -147,6 +149,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # links in manpage
 %patch02 -p1 -b .manpage
 %patch03 -p1 -b .remove-queues-on-restart
+%patch04 -p1 -b .manual-copies
 
 %build
 # work-around Rpath
@@ -312,6 +315,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Jul 20 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-2
+- 1848575 - [cups, cups-filters] PPD generators creates invalid cupsManualCopies entry
+
 * Mon Jun 08 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-1
 - 1.27.5
 
