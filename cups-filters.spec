@@ -301,6 +301,7 @@ done
 %files libs
 %dir %{_pkgdocdir}/
 %{_pkgdocdir}/COPYING
+%dir %{_pkgdocdir}/fontembed
 %{_pkgdocdir}/fontembed/README
 %{_libdir}/libcupsfilters.so.1*
 %{_libdir}/libfontembed.so.1*
@@ -317,6 +318,7 @@ done
 %changelog
 * Wed Aug 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-4
 - use %%make_build and %%make_install according FPG
+- own 'new' directories
 
 * Mon Jul 27 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.27.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
