@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -178,10 +178,10 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --enable-driverless \
            --enable-pclm
 
-make %{?_smp_mflags}
+%make_build
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
 
 # Don't ship libtool la files.
 rm -f %{buildroot}%{_libdir}/lib*.la
@@ -315,6 +315,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-4
+- use %%make_build and %%make_install according FPG
+
 * Mon Jul 27 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.27.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
 
