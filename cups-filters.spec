@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.5
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -116,6 +116,9 @@ Requires(postun): systemd
 # with avahi - needed for device discovery as well
 Recommends: nss-mdns
 Recommends: avahi
+
+# ipptool is used in driverless backend, not needed classic PPD based print queue
+Recommends: cups-ipptool
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -316,6 +319,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Aug 06 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-5
+- require ipptool explicitly
+
 * Wed Aug 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-4
 - use %%make_build and %%make_install according FPG
 - own 'new' directories
