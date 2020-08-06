@@ -70,8 +70,6 @@ BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
 BuildRequires: pkgconfig(glib-2.0)
 BuildRequires: systemd
-# for test suite
-BuildRequires: cups-ipptool
 
 # Make sure we get postscriptdriver tags.
 BuildRequires: python3-cups
@@ -321,6 +319,7 @@ done
 %changelog
 * Thu Aug 06 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-5
 - require ipptool explicitly
+- remove buildrequire on ipptool
 
 * Wed Aug 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-4
 - use %%make_build and %%make_install according FPG
