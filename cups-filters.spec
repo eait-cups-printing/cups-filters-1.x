@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.5
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -32,6 +32,8 @@ Patch02: cups-browsed.8.patch
 Patch03: cups-filters-remove-queues-on-restart.patch
 # backported from upstream, copies were ignored because typo in ppdgenerator
 Patch04: cups-filters-manual-copies.patch
+# 1867412 - cups-browsed leaks memory
+Patch05: 0001-cups-browsed.c-Fix-several-memory-leaks.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -151,6 +153,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %patch02 -p1 -b .manpage
 %patch03 -p1 -b .remove-queues-on-restart
 %patch04 -p1 -b .manual-copies
+%patch05 -p1 -b .sizes-leak
 
 %build
 # work-around Rpath
@@ -317,6 +320,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Wed Aug 19 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-6
+- 1867412 - cups-browsed leaks memory
+
 * Thu Aug 06 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-5
 - require ipptool explicitly
 - remove buildrequire on ipptool
