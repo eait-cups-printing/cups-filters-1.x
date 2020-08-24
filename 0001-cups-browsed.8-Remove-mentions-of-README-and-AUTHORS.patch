@@ -1,0 +1,31 @@
+From 6b650f45b21e306db482221223584497a710b54d Mon Sep 17 00:00:00 2001
+From: Zdenek Dohnal <zdohnal@redhat.com>
+Date: Mon, 15 Jun 2020 14:55:31 +0200
+Subject: [PATCH] cups-browsed.8: Remove mentions of README and AUTHORS files
+
+---
+ utils/cups-browsed.8 | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/utils/cups-browsed.8 b/utils/cups-browsed.8
+index cc8374ce..73c2f686 100644
+--- a/utils/cups-browsed.8
++++ b/utils/cups-browsed.8
+@@ -96,12 +96,8 @@ that clients running cups 1.6.x plus \fBcups-browsed\fP can use the CUPS
+ broadcasts from servers with cups 1.5.x. As with browsing of Bonjour
+ broadcasts, the created local raw queues are available to applications
+ and command line tools.
++.PP
++This manual page was written for the Debian Project, but it may be used by others.
+ .SH SEE ALSO
+ 
+ \fBcups-browsed.conf\fP(5)
+-.PP
+-/usr/share/doc/\fBcups-browsed\fP/README.gz
+-.SH AUTHOR
+-The authors of \fBcups-browsed\fP are listed in /usr/share/doc/\fBcups-browsed\fP/AUTHORS.
+-.PP
+-This manual page was written for the Debian Project, but it may be used by others.
+-- 
+2.26.2
+

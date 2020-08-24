@@ -23,11 +23,8 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 # add configure option for local_queue_naming for remote CUPS queues
 # backported from upstream
 Patch01: 0001-configure.ac-Add-configure-option-for-local-queues-n.patch
-# Links in man page is wrong - it shows 'cups-browsed' in path, but we
-# have 'cups-filters' in path, because it is shipped in 'cups-filters' package
-# instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
-# so cups-browsed would have separate sub package, so the link would be correct
-Patch02: cups-browsed.8.patch
+# remove bad paths in man page, backported from upstream
+Patch02: 0001-cups-browsed.8-Remove-mentions-of-README-and-AUTHORS.patch
 # upstream decided on keep queues after restart - IMO it causes more issues than it
 # solves https://github.com/OpenPrinting/cups-filters/issues/241
 Patch03: cups-filters-remove-queues-on-restart.patch
@@ -326,6 +323,7 @@ done
 %changelog
 * Fri Aug 21 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-7
 - use configure option instead of downstream, cups-browsed.conf editing, patch
+- the exact path in cups-browsed manpage was removed, use the patch removing it instead of downstream one
 
 * Wed Aug 19 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-6
 - 1867412 - cups-browsed leaks memory
