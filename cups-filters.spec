@@ -30,7 +30,7 @@ Patch02: 0001-cups-browsed.8-Remove-mentions-of-README-and-AUTHORS.patch
 Patch03: cups-filters-remove-queues-on-restart.patch
 # backported from upstream, copies were ignored because typo in ppdgenerator
 Patch04: cups-filters-manual-copies.patch
-# 1867412 - cups-browsed leaks memory
+# 1867412 - cups-browsed leaks memory, backported from upstream
 Patch05: 0001-cups-browsed.c-Fix-several-memory-leaks.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
@@ -325,6 +325,7 @@ done
 - use configure option instead of downstream, cups-browsed.conf editing, patch
 - the exact path in cups-browsed manpage was removed, use the patch removing it instead of downstream one
 - use configure option to dont save queues between restarts instead of downstream patch reverting the issue
+- memory leaks patch is from upstream too
 
 * Wed Aug 19 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-6
 - 1867412 - cups-browsed leaks memory
