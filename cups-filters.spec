@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.27.5
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,8 +20,9 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-# set defaults in cups-browsed.conf
-Patch01: cups-filters-createall.patch
+# add configure option for local_queue_naming for remote CUPS queues
+# backported from upstream
+Patch01: 0001-configure.ac-Add-configure-option-for-local-queues-n.patch
 # Links in man page is wrong - it shows 'cups-browsed' in path, but we
 # have 'cups-filters' in path, because it is shipped in 'cups-filters' package
 # instead of 'cups-browsed' as Ubuntu does. I can repack the project later,
@@ -148,7 +149,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
 %setup -q
 
 # set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
-%patch01 -p1 -b .createall
+%patch01 -p1 -b .add-configure-local-queues
 # links in manpage
 %patch02 -p1 -b .manpage
 %patch03 -p1 -b .remove-queues-on-restart
@@ -172,6 +173,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
 # --disable-silent-rules - verbose build output
 # --disable-mutool - mupdf is retired in Fedora, use qpdf
 # --enable-pclm - support for pclm language
+# --with-remote-cups-local-queue-naming=RemoteName - name created local queues, which point to
+#                                                    remote CUPS queue, by its name from the server
 
 %configure --disable-static \
            --disable-silent-rules \
@@ -180,7 +183,8 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --with-rcdir=no \
            --disable-mutool \
            --enable-driverless \
-           --enable-pclm
+           --enable-pclm \
+           --with-remote-cups-local-queue-naming=RemoteName
 
 %make_build
 
@@ -320,6 +324,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Fri Aug 21 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-7
+- use configure option instead of downstream, cups-browsed.conf editing, patch
+
 * Wed Aug 19 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-6
 - 1867412 - cups-browsed leaks memory
 
