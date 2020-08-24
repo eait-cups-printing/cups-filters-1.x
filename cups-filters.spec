@@ -324,6 +324,7 @@ done
 * Fri Aug 21 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-7
 - use configure option instead of downstream, cups-browsed.conf editing, patch
 - the exact path in cups-browsed manpage was removed, use the patch removing it instead of downstream one
+- use configure option to dont save queues between restarts instead of downstream patch reverting the issue
 
 * Wed Aug 19 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-6
 - 1867412 - cups-browsed leaks memory
