@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.27.5
-Release: 7%{?dist}
+Version: 1.28.1
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,18 +20,7 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-# add configure option for local_queue_naming for remote CUPS queues
-# backported from upstream
-Patch01: 0001-configure.ac-Add-configure-option-for-local-queues-n.patch
-# remove bad paths in man page, backported from upstream
-Patch02: 0001-cups-browsed.8-Remove-mentions-of-README-and-AUTHORS.patch
-# upstream decided on keep queues after restart - IMO it causes more issues than it
-# solves https://github.com/OpenPrinting/cups-filters/issues/241
-Patch03: cups-filters-remove-queues-on-restart.patch
-# backported from upstream, copies were ignored because typo in ppdgenerator
-Patch04: cups-filters-manual-copies.patch
-# 1867412 - cups-browsed leaks memory, backported from upstream
-Patch05: 0001-cups-browsed.c-Fix-several-memory-leaks.patch
+Patch01: 0001-libcupsfilters-Removed-all-signal-handling-and-globa.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -44,6 +33,8 @@ Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 BuildRequires: gcc
 # gcc-c++ for pdftoopvp, pdftopdf
 BuildRequires: gcc-c++
+# for autosetup
+BuildRequires: git
 
 BuildRequires: cups-devel
 BuildRequires: pkgconf-pkg-config
@@ -143,15 +134,7 @@ This package provides cupsfilters and fontembed libraries.
 This is the development package for OpenPrinting CUPS filters and backends.
 
 %prep
-%setup -q
-
-# set LocalQueueNamingRemoteCUPS and CreateIPPPrinterQueues by default
-%patch01 -p1 -b .add-configure-local-queues
-# links in manpage
-%patch02 -p1 -b .manpage
-%patch03 -p1 -b .remove-queues-on-restart
-%patch04 -p1 -b .manual-copies
-%patch05 -p1 -b .sizes-leak
+%autosetup -S git
 
 %build
 # work-around Rpath
@@ -253,7 +236,47 @@ done
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/NEWS
 %config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
-%attr(0755,root,root) %{_cups_serverbin}/filter/*
+%{_cups_serverbin}/filter/cgmtopdf
+%{_cups_serverbin}/filter/cmxtopdf
+%{_cups_serverbin}/filter/emftopdf
+%{_cups_serverbin}/filter/imagetoubrl
+%{_cups_serverbin}/filter/svgtopdf
+%{_cups_serverbin}/filter/textbrftoindexv4
+%{_cups_serverbin}/filter/vectortoubrl
+%{_cups_serverbin}/filter/wmftopdf
+%{_cups_serverbin}/filter/xfigtopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/bannertopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/commandtoescpx
+%attr(0755,root,root) %{_cups_serverbin}/filter/commandtopclx
+%attr(0755,root,root) %{_cups_serverbin}/filter/foomatic-rip
+%attr(0755,root,root) %{_cups_serverbin}/filter/gstopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/gstopxl
+%attr(0755,root,root) %{_cups_serverbin}/filter/gstoraster
+%attr(0755,root,root) %{_cups_serverbin}/filter/imagetobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/imagetopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/imagetops
+%attr(0755,root,root) %{_cups_serverbin}/filter/imagetoraster
+%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv3
+%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv4
+%attr(0755,root,root) %{_cups_serverbin}/filter/musicxmltobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/pdftopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/pdftops
+%attr(0755,root,root) %{_cups_serverbin}/filter/pdftoraster
+%attr(0755,root,root) %{_cups_serverbin}/filter/rastertoescpx
+%attr(0755,root,root) %{_cups_serverbin}/filter/rastertopclm
+%attr(0755,root,root) %{_cups_serverbin}/filter/rastertopclx
+%attr(0755,root,root) %{_cups_serverbin}/filter/rastertopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/rastertops
+%attr(0755,root,root) %{_cups_serverbin}/filter/sys5ippprinter
+%attr(0755,root,root) %{_cups_serverbin}/filter/textbrftoindexv3
+%attr(0755,root,root) %{_cups_serverbin}/filter/texttobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/texttopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/texttops
+%attr(0755,root,root) %{_cups_serverbin}/filter/texttotext
+%attr(0755,root,root) %{_cups_serverbin}/filter/vectortobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/vectortopdf
 # all backends needs to be run only as root because of kerberos
 %attr(0700,root,root) %{_cups_serverbin}/backend/parallel
 # Serial backend needs to run as root (bug #212577#c4).
@@ -266,8 +289,11 @@ done
 %attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
 %{_bindir}/foomatic-rip
 %{_bindir}/driverless
+%{_bindir}/driverless-fax
 %{_cups_serverbin}/backend/driverless
+%{_cups_serverbin}/backend/driverless-fax
 %{_cups_serverbin}/driver/driverless
+%{_cups_serverbin}/driver/driverless-fax
 %{_datadir}/cups/banners
 %{_datadir}/cups/braille
 %{_datadir}/cups/charsets
@@ -321,6 +347,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Aug 27 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-1
+- 1.28.1 - added driverless fax support
+
 * Fri Aug 21 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.27.5-7
 - use configure option instead of downstream, cups-browsed.conf editing, patch
 - the exact path in cups-browsed manpage was removed, use the patch removing it instead of downstream one
