@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -100,10 +100,10 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-# cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
-# or device during discovery for newer (2012+) devices - make it recommended together
-# with avahi - needed for device discovery as well
+%if 0%{?fedora} <= 33 || 0%{?rhel} <= 8
 Recommends: nss-mdns
+%endif
+# avahi is needed for device discovery
 Recommends: avahi
 
 # ipptool is used in driverless backend, not needed classic PPD based print queue
@@ -347,6 +347,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Aug 31 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-2
+- MDNS resolving should be done by systemd-resolved now
+
 * Thu Aug 27 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-1
 - 1.28.1 - added driverless fax support
 
