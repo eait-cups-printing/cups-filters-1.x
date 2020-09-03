@@ -100,9 +100,10 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-%if 0%{?fedora} <= 33 || 0%{?rhel} <= 8
+# cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
+# or device during discovery for newer (2012+) devices - make it recommended together
+# with avahi - needed for device discovery as well
 Recommends: nss-mdns
-%endif
 # avahi is needed for device discovery
 Recommends: avahi
 
@@ -347,6 +348,10 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Sep 03 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-2
+- revert previous commit - systemd-resolved doesn't work with avahi right now
+  because missing link in NetworkManager
+
 * Mon Aug 31 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-2
 - MDNS resolving should be done by systemd-resolved now
 
