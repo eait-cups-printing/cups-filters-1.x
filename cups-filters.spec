@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.1
-Release: 2%{?dist}
+Version: 1.28.2
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,7 +20,6 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-Patch01: 0001-libcupsfilters-Removed-all-signal-handling-and-globa.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -348,6 +347,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Sep 15 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-1
+- 1.28.2
+
 * Thu Sep 03 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.1-2
 - revert previous commit - systemd-resolved doesn't work with avahi right now
   because missing link in NetworkManager
