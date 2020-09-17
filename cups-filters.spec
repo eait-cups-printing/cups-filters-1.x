@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,6 +20,7 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
+Patch01: cups-filters-init-buf.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -347,6 +348,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Sep 17 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-2
+- 1879147 - driverless cannot generate ppd for dns-sd based uris
+
 * Tue Sep 15 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-1
 - 1.28.2
 
