@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,10 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 Patch01: cups-filters-init-buf.patch
+# backported from upstream https://github.com/OpenPrinting/cups-filters/pull/311
+Patch02: cups-filters-uuid.patch
+# backported from upstream https://github.com/OpenPrinting/cups-filters/pull/313
+Patch03: foomatic-remove-tmpfile.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -348,6 +352,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Sep 29 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-3
+- 1891720 - foomatic-rip files up /var/spool/tmp with temporary files
+
 * Thu Sep 17 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-2
 - 1879147 - driverless cannot generate ppd for dns-sd based uris
 
