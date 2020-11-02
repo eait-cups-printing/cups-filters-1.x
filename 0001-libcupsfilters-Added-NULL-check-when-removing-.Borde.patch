@@ -1,0 +1,58 @@
+From 240ffb901d06a117bb8e10b486bfd3de6fe464b2 Mon Sep 17 00:00:00 2001
+From: Till Kamppeter <till.kamppeter@gmail.com>
+Date: Wed, 28 Oct 2020 10:44:19 +0100
+Subject: [PATCH] libcupsfilters: Added NULL check when removing ".Borderless"
+ suffixes from page size names
+
+---
+ NEWS                       |  2 ++
+ cupsfilters/ppdgenerator.c | 12 ++++++++----
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/cupsfilters/ppdgenerator.c b/cupsfilters/ppdgenerator.c
+index 9fd4fb21..7b4aa0cf 100644
+--- a/cupsfilters/ppdgenerator.c
++++ b/cupsfilters/ppdgenerator.c
+@@ -2224,7 +2224,8 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 
+     if (all_borderless) {
+       suffix = strcasestr(ppdname, ".Borderless");
+-      *suffix = '\0';
++      if (suffix)
++	*suffix = '\0';
+     }
+ 
+     cupsFilePrintf(fp, "*OpenUI *PageSize/%s: PickOne\n"
+@@ -2258,7 +2259,8 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 
+       if (all_borderless) {
+ 	suffix = strcasestr(ppdsizename, ".Borderless");
+-	*suffix = '\0';
++	if (suffix)
++	  *suffix = '\0';
+       }
+ 
+       cupsFilePrintf(fp, "*PageSize %s%s%s%s: \"<</PageSize[%s %s]>>setpagedevice\"\n",
+@@ -2302,7 +2304,8 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 
+       if (all_borderless) {
+ 	suffix = strcasestr(ppdsizename, ".Borderless");
+-	*suffix = '\0';
++	if (suffix)
++	  *suffix = '\0';
+       }
+ 
+       cupsFilePrintf(fp, "*PageRegion %s%s%s%s: \"<</PageSize[%s %s]>>setpagedevice\"\n",
+@@ -2338,7 +2341,8 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 
+       if (all_borderless) {
+ 	suffix = strcasestr(ppdsizename, ".Borderless");
+-	*suffix = '\0';
++	if (suffix)
++	  *suffix = '\0';
+       }
+ 
+       cupsFilePrintf(fp, "*ImageableArea %s: \"%s %s %s %s\"\n", ppdsizename,
+-- 
+2.26.2
+

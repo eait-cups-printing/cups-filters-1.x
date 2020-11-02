@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.2
-Release: 3%{?dist}
+Version: 1.28.5
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,11 +20,10 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-Patch01: cups-filters-init-buf.patch
-# backported from upstream https://github.com/OpenPrinting/cups-filters/pull/311
-Patch02: cups-filters-uuid.patch
 # backported from upstream https://github.com/OpenPrinting/cups-filters/pull/313
-Patch03: foomatic-remove-tmpfile.patch
+Patch01: foomatic-remove-tmpfile.patch
+# backported from upstream
+Patch02: 0001-libcupsfilters-Added-NULL-check-when-removing-.Borde.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -352,6 +351,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Mon Nov 02 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-1
+- 1.28.5, 1881365 - cups-browsed crashing
+
 * Tue Sep 29 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.2-3
 - 1891720 - foomatic-rip files up /var/spool/tmp with temporary files
 
