@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -37,7 +37,9 @@ BuildRequires: gcc
 # gcc-c++ for pdftoopvp, pdftopdf
 BuildRequires: gcc-c++
 # for autosetup
-BuildRequires: git
+BuildRequires: git-core
+# uses make for compiling
+BuildRequires: make
 
 BuildRequires: cups-devel
 BuildRequires: pkgconf-pkg-config
@@ -351,6 +353,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Thu Nov 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-2
+- use make and git-core
+
 * Mon Nov 02 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-1
 - 1.28.5, 1881365 - cups-browsed crashing
 
