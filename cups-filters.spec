@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -23,7 +23,27 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 # backported from upstream https://github.com/OpenPrinting/cups-filters/pull/313
 Patch01: foomatic-remove-tmpfile.patch
 # backported from upstream
+# https://github.com/OpenPrinting/cups-filters/commit/240ffb901d06a117bb8e10b486bfd3de6fe464b2
 Patch02: 0001-libcupsfilters-Added-NULL-check-when-removing-.Borde.patch
+# all below to patch19 backported from upstream PR
+# https://github.com/OpenPrinting/cups-filters/pull/322
+Patch03: cups-filters-resolution-memleaks.patch
+Patch04: cups-filters-tagzeroattrs-notconst.patch
+Patch05: cups-filters-unused-pointer.patch
+Patch06: cups-filters-free-temp-insequence.patch
+Patch07: cups-filters-uuid-recast.patch
+Patch08: cups-filters-get-attrs-earlier.patch
+Patch09: cups-filters-free-after-error.patch
+Patch10: cups-filters-free-printer-sizes.patch
+Patch11: cups-filters-free-current-media.patch
+Patch12: cups-filters-nickname-handling.patch
+Patch13: cups-filters-uninit-attrs.patch
+Patch14: cups-filters-allocedrange-lost.patch
+Patch15: cups-filters-document-format-leak.patch
+Patch16: cups-filters-ipp-leak.patch
+Patch17: cups-filters-support-jobattr-leaks.patch
+Patch18: cups-filters-undef-printquality.patch
+Patch19: cups-filters-warnings.patch
 
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
@@ -353,6 +373,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Nov 24 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-3
+- fix various memory issues within cups-browsed
+
 * Thu Nov 05 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-2
 - use make and git-core
 

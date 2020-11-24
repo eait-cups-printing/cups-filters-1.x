@@ -1,0 +1,13 @@
+diff --git a/utils/cups-browsed.c b/utils/cups-browsed.c
+index 0d0f30f..885bc1c 100644
+--- a/utils/cups-browsed.c
++++ b/utils/cups-browsed.c
+@@ -3622,7 +3622,7 @@ new_local_printer (const char *device_uri,
+ {
+   local_printer_t *printer = g_malloc (sizeof (local_printer_t));
+   printer->device_uri = strdup (device_uri);
+-  printer->uuid = uuid;
++  printer->uuid = (char*)uuid;
+   printer->cups_browsed_controlled = cups_browsed_controlled;
+   return printer;
+ }

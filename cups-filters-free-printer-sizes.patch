@@ -1,0 +1,30 @@
+diff --git a/cupsfilters/ppdgenerator.c b/cupsfilters/ppdgenerator.c
+index b8a907f..c50ba78 100644
+--- a/cupsfilters/ppdgenerator.c
++++ b/cupsfilters/ppdgenerator.c
+@@ -2354,8 +2354,6 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 		     twidth, tlength);
+     }
+ 
+-    cupsArrayDelete(sizes);
+-
+    /*
+     * Custom size support...
+     */
+@@ -2394,7 +2392,6 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+       cupsFilePuts(fp, "*CustomPageSize True: \"pop pop pop <</PageSize[5 -2 roll]/ImagingBBox null>>setpagedevice\"\n");
+     }
+   } else {
+-    cupsArrayDelete(sizes);
+     cupsFilePrintf(fp,
+ 		   "*%% Printer did not supply page size info via IPP, using defaults\n"
+ 		   "*OpenUI *PageSize/Media Size: PickOne\n"
+@@ -2461,6 +2458,8 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+ 		   "*PaperDimension EnvMonarch/Envelope Monarch: \"279 540\"\n");
+   }
+ 
++  cupsArrayDelete(printer_sizes);
++
+  /*
+   * InputSlot...
+   */
