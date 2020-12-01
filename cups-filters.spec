@@ -279,6 +279,9 @@ done
 %attr(0700,root,root) %{_cups_serverbin}/backend/serial
 %{_cups_serverbin}/backend/driverless
 %{_cups_serverbin}/backend/driverless-fax
+%attr(0755,root,root) %{_cups_serverbin}/filter/bannertopdf
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtopclx
 %attr(0755,root,root) %{_cups_serverbin}/filter/foomatic-rip
