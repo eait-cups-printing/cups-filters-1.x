@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -76,8 +76,6 @@ BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(dbus-1)
 BuildRequires: ghostscript
-# libijs
-BuildRequires: pkgconfig(ijs)
 BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(fontconfig)
 BuildRequires: pkgconfig(lcms2)
@@ -373,6 +371,9 @@ done
 %{_libdir}/libfontembed.so
 
 %changelog
+* Tue Dec 01 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-4
+- filters using ijs were removed, removed the dep
+
 * Tue Nov 24 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-3
 - fix various memory issues within cups-browsed
 
