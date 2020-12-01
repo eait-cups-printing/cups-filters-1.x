@@ -45,10 +45,14 @@ Patch17: cups-filters-support-jobattr-leaks.patch
 Patch18: cups-filters-undef-printquality.patch
 Patch19: cups-filters-warnings.patch
 
-Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
-# gcc and gcc-c++ is not in buildroot by default
+# autogen.sh
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: gettext-devel
+BuildRequires: libtool
 
+# build requirements for build system:
 # gcc for backends (implicitclass, parallel, serial, backend error handling)
 # cupsfilters (colord, color manager...), filter (banners, 
 # commandto*, braille, foomatic-rip, imagetoraster, imagetopdf, gstoraster e.g.),
@@ -60,25 +64,32 @@ BuildRequires: gcc-c++
 BuildRequires: git-core
 # uses make for compiling
 BuildRequires: make
-
-BuildRequires: cups-devel
+# we use pkgconfig to get a proper devel packages
+# proper CFLAGS and LDFLAGS
 BuildRequires: pkgconf-pkg-config
+
+# uses CUPS API functions - arrays, ipp functions
+BuildRequires: cups-devel
+
 # pdftopdf
 BuildRequires: pkgconfig(libqpdf)
+
 # pdftops
 BuildRequires: poppler-utils
-# pdftoijs, pdftoopvp, pdftoraster, gstoraster
-BuildRequires: pkgconfig(poppler)
-BuildRequires: poppler-cpp-devel
+
+# pdftoraster, gstoraster
+BuildRequires: ghostscript
 BuildRequires: libjpeg-turbo-devel
 BuildRequires: libtiff-devel
-BuildRequires: pkgconfig(libpng)
-BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(dbus-1)
-BuildRequires: ghostscript
-BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(fontconfig)
+BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(lcms2)
+BuildRequires: pkgconfig(libpng)
+BuildRequires: pkgconfig(poppler)
+BuildRequires: pkgconfig(zlib)
+BuildRequires: poppler-cpp-devel
+
 # cups-browsed
 BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
@@ -91,30 +102,32 @@ BuildRequires: python3-cups
 # Testing font for test scripts.
 BuildRequires: dejavu-sans-fonts
 
-# autogen.sh
-BuildRequires: autoconf
-BuildRequires: automake
-BuildRequires: gettext-devel
-BuildRequires: libtool
-
 # needed for systemd rpm macros in scriptlets
 BuildRequires: systemd-rpm-macros
 
-Requires: cups-filesystem
-# if --with-pdftops is set to hybrid, we use poppler filters for several printers
-# and for printing banners, for other printers we need gs - ghostscript
-Requires: poppler-utils
-# several filters calls 'gs' binary during filtering
-Requires: ghostscript
-
-# for getting ICC profiles for filters (dbus must run)
-Requires: colord
-
-# texttopdf
-Requires: liberation-mono-fonts
+# cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
+# or device during discovery for newer (2012+) devices - make it recommended together
+# with avahi - needed for device discovery as well
+Recommends: nss-mdns
+# avahi is needed for device discovery
+Recommends: avahi
+# ipptool is used in driverless backend, not needed classic PPD based print queue
+Recommends: cups-ipptool
 
 # pstopdf
 Requires: bc grep sed which
+# for getting ICC profiles for filters (dbus must run)
+Requires: colord
+Requires: cups-filesystem
+# have the same libs for the package
+Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
+# several filters calls 'gs' binary during filtering
+Requires: ghostscript
+# texttopdf
+Requires: liberation-mono-fonts
+# if --with-pdftops is set to hybrid, we use poppler filters for several printers
+# and for printing banners, for other printers we need gs - ghostscript
+Requires: poppler-utils
 
 # cups-browsed
 # cups-browsed needs to have cups.service to run
@@ -123,15 +136,6 @@ Requires(post): systemd
 Requires(preun): systemd
 Requires(postun): systemd
 
-# cups-browsed needs nss-mdns for resolving .local addresses of remote print queues
-# or device during discovery for newer (2012+) devices - make it recommended together
-# with avahi - needed for device discovery as well
-Recommends: nss-mdns
-# avahi is needed for device discovery
-Recommends: avahi
-
-# ipptool is used in driverless backend, not needed classic PPD based print queue
-Recommends: cups-ipptool
 
 %package libs
 Summary: OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -259,19 +263,22 @@ done
 %{_pkgdocdir}/ABOUT-NLS
 %{_pkgdocdir}/AUTHORS
 %{_pkgdocdir}/NEWS
-%config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
-%{_cups_serverbin}/filter/cgmtopdf
-%{_cups_serverbin}/filter/cmxtopdf
-%{_cups_serverbin}/filter/emftopdf
-%{_cups_serverbin}/filter/imagetoubrl
-%{_cups_serverbin}/filter/svgtopdf
-%{_cups_serverbin}/filter/textbrftoindexv4
-%{_cups_serverbin}/filter/vectortoubrl
-%{_cups_serverbin}/filter/wmftopdf
-%{_cups_serverbin}/filter/xfigtopdf
-%attr(0755,root,root) %{_cups_serverbin}/filter/bannertopdf
-%attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
-%attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
+%{_bindir}/foomatic-rip
+%{_bindir}/driverless
+%{_bindir}/driverless-fax
+%{_sbindir}/cups-browsed
+%attr(0700,root,root) %{_cups_serverbin}/backend/beh
+# cups-brf needs to be run as root, otherwise it leaves error messages
+# in journal
+%attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
+# implicitclass backend must be run as root
+%attr(0700,root,root) %{_cups_serverbin}/backend/implicitclass
+# all backends needs to be run only as root because of kerberos
+%attr(0700,root,root) %{_cups_serverbin}/backend/parallel
+# Serial backend needs to run as root (bug #212577#c4).
+%attr(0700,root,root) %{_cups_serverbin}/backend/serial
+%{_cups_serverbin}/backend/driverless
+%{_cups_serverbin}/backend/driverless-fax
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtopclx
 %attr(0755,root,root) %{_cups_serverbin}/filter/foomatic-rip
@@ -301,39 +308,21 @@ done
 %attr(0755,root,root) %{_cups_serverbin}/filter/texttotext
 %attr(0755,root,root) %{_cups_serverbin}/filter/vectortobrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/vectortopdf
-# all backends needs to be run only as root because of kerberos
-%attr(0700,root,root) %{_cups_serverbin}/backend/parallel
-# Serial backend needs to run as root (bug #212577#c4).
-%attr(0700,root,root) %{_cups_serverbin}/backend/serial
-# implicitclass backend must be run as root
-%attr(0700,root,root) %{_cups_serverbin}/backend/implicitclass
-%attr(0700,root,root) %{_cups_serverbin}/backend/beh
-# cups-brf needs to be run as root, otherwise it leaves error messages
-# in journal
-%attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
-%{_bindir}/foomatic-rip
-%{_bindir}/driverless
-%{_bindir}/driverless-fax
-%{_cups_serverbin}/backend/driverless
-%{_cups_serverbin}/backend/driverless-fax
+%{_cups_serverbin}/filter/cgmtopdf
+%{_cups_serverbin}/filter/cmxtopdf
+%{_cups_serverbin}/filter/emftopdf
+%{_cups_serverbin}/filter/imagetoubrl
+%{_cups_serverbin}/filter/svgtopdf
+%{_cups_serverbin}/filter/textbrftoindexv4
+%{_cups_serverbin}/filter/vectortoubrl
+%{_cups_serverbin}/filter/wmftopdf
+%{_cups_serverbin}/filter/xfigtopdf
 %{_cups_serverbin}/driver/driverless
 %{_cups_serverbin}/driver/driverless-fax
 %{_datadir}/cups/banners
 %{_datadir}/cups/braille
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
-# this needs to be in the main package because of cupsfilters.drv
-%{_datadir}/cups/ppdc/pcl.h
-%{_datadir}/cups/ppdc/braille.defs
-%{_datadir}/cups/ppdc/fr-braille.po
-%{_datadir}/cups/ppdc/imagemagick.defs
-%{_datadir}/cups/ppdc/index.defs
-%{_datadir}/cups/ppdc/liblouis.defs
-%{_datadir}/cups/ppdc/liblouis1.defs
-%{_datadir}/cups/ppdc/liblouis2.defs
-%{_datadir}/cups/ppdc/liblouis3.defs
-%{_datadir}/cups/ppdc/liblouis4.defs
-%{_datadir}/cups/ppdc/media-braille.defs
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/drv/generic-brf.drv
 %{_datadir}/cups/drv/generic-ubrl.drv
@@ -346,12 +335,24 @@ done
 %{_datadir}/cups/mime/braille.convs
 %{_datadir}/cups/mime/braille.types
 %{_datadir}/ppd/cupsfilters
-%{_sbindir}/cups-browsed
-%{_unitdir}/cups-browsed.service
-%{_mandir}/man8/cups-browsed.8.gz
-%{_mandir}/man5/cups-browsed.conf.5.gz
+# this needs to be in the main package because of cupsfilters.drv
+%{_datadir}/cups/ppdc/pcl.h
+%{_datadir}/cups/ppdc/braille.defs
+%{_datadir}/cups/ppdc/fr-braille.po
+%{_datadir}/cups/ppdc/imagemagick.defs
+%{_datadir}/cups/ppdc/index.defs
+%{_datadir}/cups/ppdc/liblouis.defs
+%{_datadir}/cups/ppdc/liblouis1.defs
+%{_datadir}/cups/ppdc/liblouis2.defs
+%{_datadir}/cups/ppdc/liblouis3.defs
+%{_datadir}/cups/ppdc/liblouis4.defs
+%{_datadir}/cups/ppdc/media-braille.defs
 %{_mandir}/man1/foomatic-rip.1.gz
 %{_mandir}/man1/driverless.1.gz
+%{_mandir}/man5/cups-browsed.conf.5.gz
+%{_mandir}/man8/cups-browsed.8.gz
+%config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
+%{_unitdir}/cups-browsed.service
 
 %files libs
 %dir %{_pkgdocdir}/
@@ -362,13 +363,13 @@ done
 %{_libdir}/libfontembed.so.1*
 
 %files devel
+%{_datadir}/cups/ppdc/escp.h
 %{_includedir}/cupsfilters
 %{_includedir}/fontembed
-%{_datadir}/cups/ppdc/escp.h
-%{_libdir}/pkgconfig/libcupsfilters.pc
-%{_libdir}/pkgconfig/libfontembed.pc
 %{_libdir}/libcupsfilters.so
 %{_libdir}/libfontembed.so
+%{_libdir}/pkgconfig/libcupsfilters.pc
+%{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
 * Tue Dec 01 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-4
