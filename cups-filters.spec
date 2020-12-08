@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.5
-Release: 4%{?dist}
+Version: 1.28.6
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -20,30 +20,9 @@ License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
-# backported from upstream https://github.com/OpenPrinting/cups-filters/pull/313
-Patch01: foomatic-remove-tmpfile.patch
 # backported from upstream
 # https://github.com/OpenPrinting/cups-filters/commit/240ffb901d06a117bb8e10b486bfd3de6fe464b2
-Patch02: 0001-libcupsfilters-Added-NULL-check-when-removing-.Borde.patch
-# all below to patch19 backported from upstream PR
-# https://github.com/OpenPrinting/cups-filters/pull/322
-Patch03: cups-filters-resolution-memleaks.patch
-Patch04: cups-filters-tagzeroattrs-notconst.patch
-Patch05: cups-filters-unused-pointer.patch
-Patch06: cups-filters-free-temp-insequence.patch
-Patch07: cups-filters-uuid-recast.patch
-Patch08: cups-filters-get-attrs-earlier.patch
-Patch09: cups-filters-free-after-error.patch
-Patch10: cups-filters-free-printer-sizes.patch
-Patch11: cups-filters-free-current-media.patch
-Patch12: cups-filters-nickname-handling.patch
-Patch13: cups-filters-uninit-attrs.patch
-Patch14: cups-filters-allocedrange-lost.patch
-Patch15: cups-filters-document-format-leak.patch
-Patch16: cups-filters-ipp-leak.patch
-Patch17: cups-filters-support-jobattr-leaks.patch
-Patch18: cups-filters-undef-printquality.patch
-Patch19: cups-filters-warnings.patch
+Patch01: 0001-libcupsfilters-Added-NULL-check-when-removing-.Borde.patch
 
 
 # autogen.sh
@@ -375,6 +354,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Dec 07 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.6-1
+- 1.28.6
+
 * Tue Dec 01 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.5-4
 - filters using ijs were removed, removed the dep
 
