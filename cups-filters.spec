@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.6
+Version: 1.28.7
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -21,8 +21,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 # backported from upstream
-# https://github.com/OpenPrinting/cups-filters/commit/240ffb901d06a117bb8e10b486bfd3de6fe464b2
-Patch01: 0001-libcupsfilters-Added-NULL-check-when-removing-.Borde.patch
+Patch01: 0001-libcupsfilters-In-the-PPD-generator-really-give-prio.patch
 
 
 # autogen.sh
@@ -171,6 +170,7 @@ This is the development package for OpenPrinting CUPS filters and backends.
            --disable-mutool \
            --enable-driverless \
            --enable-pclm \
+           --with-apple-raster-filter=rastertopdf \
            --with-remote-cups-local-queue-naming=RemoteName
 
 %make_build
@@ -195,14 +195,6 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 # LSB3.2 requires /usr/bin/foomatic-rip,
 # create it temporarily as a relative symlink
 ln -sf %{_cups_serverbin}/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
-
-# Don't ship urftopdf for now (bug #1002947).
-rm -f %{buildroot}%{_cups_serverbin}/filter/urftopdf
-sed -i '/urftopdf/d' %{buildroot}%{_datadir}/cups/mime/cupsfilters.convs
-
-# Don't ship pdftoopvp for now (bug #1027557).
-rm -f %{buildroot}%{_cups_serverbin}/filter/pdftoopvp
-rm -f %{buildroot}%{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 
 
 %check
@@ -354,6 +346,10 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Jan 11 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-1
+- 1.28.7, urftopdf nor pdftoopvp aren't compiled anymore
+- 1904405 - HP M281fdw: čžš characters printed as squares with "driverless" driver
+
 * Mon Dec 07 2020 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.6-1
 - 1.28.6
 
