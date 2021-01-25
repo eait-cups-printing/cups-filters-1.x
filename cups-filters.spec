@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,7 +21,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 # backported from upstream
-Patch01: 0001-libcupsfilters-In-the-PPD-generator-really-give-prio.patch
+#Patch01: 0001-libcupsfilters-In-the-PPD-generator-really-give-prio.patch
 
 
 # autogen.sh
@@ -346,6 +346,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Jan 25 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-2
+- unpush fix for 1904405 - M281fdw now often chokes on URF
+
 * Mon Jan 11 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-1
 - 1.28.7, urftopdf nor pdftoopvp aren't compiled anymore
 - 1904405 - HP M281fdw: čžš characters printed as squares with "driverless" driver
