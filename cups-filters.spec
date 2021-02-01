@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -85,6 +85,11 @@ BuildRequires: systemd-rpm-macros
 
 # cups-browsed needs systemd-resolved or nss-mdns for resolving .local addresses of remote print queues
 # let's not require a specific package and let the user decide what he wants to use.
+# just recommend nss-mdns for Fedora for now to have working default, but
+# don't hardwire it for resolved users
+%if 0%{?fedora}
+Recommends: nss-mdns
+%endif
 # Avahi is needed for device discovery for newer (2012+) devices and its sharing - make it recommended
 Recommends: avahi
 # ippfind is used in driverless backend, not needed classic PPD based print queue
@@ -344,6 +349,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Feb 01 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-5
+- rebuilt
+
 * Thu Jan 28 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-4
 - remove nss-mdns - dont require a specific way how to resolve .local addresses
 
