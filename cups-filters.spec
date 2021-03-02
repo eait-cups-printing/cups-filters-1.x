@@ -350,7 +350,7 @@ done
 
 %changelog
 * Mon Feb 01 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-5
-- rebuilt
+- put nss-mdns only for Fedora
 
 * Thu Jan 28 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-4
 - remove nss-mdns - dont require a specific way how to resolve .local addresses
