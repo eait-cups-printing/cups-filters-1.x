@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -349,6 +349,10 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.28.7-6
+- Rebuilt for updated systemd-rpm-macros
+  See https://pagure.io/fesco/issue/2583.
+
 * Mon Feb 01 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-5
 - put nss-mdns only for Fedora
 
