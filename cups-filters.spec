@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.7
-Release: 6%{?dist}
+Release: 7%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,7 +21,9 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 # backported from upstream
-#Patch01: 0001-libcupsfilters-In-the-PPD-generator-really-give-prio.patch
+# 1954524 - cups-browsed doesn't save "*-default" options
+# upstream https://github.com/OpenPrinting/cups-filters/commit/cdd61132e1719a88dd8006c65e8e260c1aaa02e4
+Patch01: 0001-cups-browsed-Always-save-.-default-option-entries-fr.patch
 
 
 # autogen.sh
@@ -349,6 +351,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Wed Apr 28 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-7
+- 1954524 - cups-browsed doesn't save "*-default" options
+
 * Tue Mar 02 2021 Zbigniew Jędrzejewski-Szmek <zbyszek@in.waw.pl> - 1.28.7-6
 - Rebuilt for updated systemd-rpm-macros
   See https://pagure.io/fesco/issue/2583.
