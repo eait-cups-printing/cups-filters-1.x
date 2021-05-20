@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.7
-Release: 7%{?dist}
+Version: 1.28.8
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -351,6 +351,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Fri May 14 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.8-1
+- 1.28.8
+
 * Wed Apr 28 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.7-7
 - 1954524 - cups-browsed doesn't save "*-default" options
 
