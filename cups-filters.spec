@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.8
-Release: 2%{?dist}
+Version: 1.28.9
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,10 +21,9 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 # backported from upstream
-Patch01: 0001-cups-browsed-Always-save-.-default-option-entries-fr.patch
 # 1973056 - renew dbus notifications in the half of time
 # upstream https://github.com/OpenPrinting/cups-filters/commit/d90a4fc57b00b4a1f6c196bcb96025251b555dd9
-Patch02: 0001-cups-browsed.c-Make-NotifLeaseDuration-configurable-.patch
+Patch01: 0001-cups-browsed.c-Make-NotifLeaseDuration-configurable-.patch
 
 
 # autogen.sh
@@ -352,6 +351,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Jun 21 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.9-1
+- 1.28.9
+
 * Mon Jun 21 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.8-2
 - 1973056 - cups-browsed doesn't renew DBus subscription in time and all printing comes to a halt
 
