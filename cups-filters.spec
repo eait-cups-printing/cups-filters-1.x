@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.9
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -24,6 +24,8 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 # 1973056 - renew dbus notifications in the half of time
 # upstream https://github.com/OpenPrinting/cups-filters/commit/d90a4fc57b00b4a1f6c196bcb96025251b555dd9
 Patch01: 0001-cups-browsed.c-Make-NotifLeaseDuration-configurable-.patch
+# 1981603 - pdftopdf doesn't handle "page-range=10-2147483647" correctly
+Patch02: 0001-libcupsfilters-Fix-page-range-like-10-in-pdftopdf-fi.patch
 
 
 # autogen.sh
@@ -351,6 +353,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Wed Jul 14 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.9-2
+- 1981603 - pdftopdf doesn't handle "page-range=10-2147483647" correctly
+
 * Mon Jun 21 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.9-1
 - 1.28.9
 
