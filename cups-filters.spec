@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.9
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -353,6 +353,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.28.9-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Wed Jul 14 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.9-2
 - 1981603 - pdftopdf doesn't handle "page-range=10-2147483647" correctly
 
