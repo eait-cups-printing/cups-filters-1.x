@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.9
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -68,9 +68,8 @@ BuildRequires: pkgconfig(fontconfig)
 BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(lcms2)
 BuildRequires: pkgconfig(libpng)
-BuildRequires: pkgconfig(poppler)
+BuildRequires: pkgconfig(poppler-cpp)
 BuildRequires: pkgconfig(zlib)
-BuildRequires: poppler-cpp-devel
 
 # cups-browsed
 BuildRequires: avahi-devel
@@ -353,6 +352,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Tue Jul 27 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.9-4
+- remove build requirement on poppler-devel - we need just poppler-cpp-devel
+
 * Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.28.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
