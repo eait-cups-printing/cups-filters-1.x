@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -66,6 +66,9 @@ BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(poppler-cpp)
 BuildRequires: pkgconfig(zlib)
 
+# braille printing
+BuildRequires: liblouis-devel
+
 # cups-browsed
 BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
@@ -107,6 +110,12 @@ Requires: liberation-mono-fonts
 # if --with-pdftops is set to hybrid, we use poppler filters for several printers
 # and for printing banners, for other printers we need gs - ghostscript
 Requires: poppler-utils
+
+# braille printing - required for file conversion
+# liblouisutdml-utils for file2brl
+# liblouis-utils for lou_translate
+Requires: liblouis-utils
+Requires: liblouisutdml-utils
 
 # cups-browsed
 # cups-browsed needs to have cups.service to run
@@ -347,6 +356,9 @@ done
 %{_libdir}/pkgconfig/libfontembed.pc
 
 %changelog
+* Mon Dec 06 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.10-2
+- 1995728 - Enable braille printing
+
 * Tue Sep 14 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.10-1
 - 1.28.10
 
