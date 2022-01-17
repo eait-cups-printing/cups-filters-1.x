@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -66,9 +66,6 @@ BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(poppler-cpp)
 BuildRequires: pkgconfig(zlib)
 
-# braille printing
-BuildRequires: liblouis-devel
-
 # cups-browsed
 BuildRequires: avahi-devel
 BuildRequires: pkgconfig(avahi-glib)
@@ -95,6 +92,8 @@ Recommends: nss-mdns
 Recommends: avahi
 # ippfind is used in driverless backend, not needed classic PPD based print queue
 Recommends: cups-ipptool
+# braille filters and backend
+Recommends: %{name}-braille%{?_isa} = %{version}-%{release}
 
 # pstopdf
 Requires: bc grep sed which
@@ -110,12 +109,6 @@ Requires: liberation-mono-fonts
 # if --with-pdftops is set to hybrid, we use poppler filters for several printers
 # and for printing banners, for other printers we need gs - ghostscript
 Requires: poppler-utils
-
-# braille printing - required for file conversion
-# liblouisutdml-utils for file2brl
-# liblouis-utils for lou_translate
-Requires: liblouis-utils
-Requires: liblouisutdml-utils
 
 # cups-browsed
 # cups-browsed needs to have cups.service to run
@@ -136,6 +129,20 @@ Summary: OpenPrinting CUPS filters and backends - development environment
 License: LGPLv2 and MIT
 Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 
+%package braille
+Summary: OpenPrinting CUPS filters and backends - braille filters and backend
+License: GPLv2+ and MIT
+BuildRequires: liblouis-devel
+# remove after F36 goes EOL
+Conflicts: cups-filters < 1.28.10-3
+# we need classic pdftopdf and other filters as well
+Requires: cups-filters{?_isa} = %{version}-%{release}
+# lou_translate and file2brl are needed for file conversions
+# liblouis-utils for lou_translate
+Requires: liblouis-utils
+# liblouisutdml-utils for file2brl
+Requires: liblouisutdml-utils
+
 %description
 Contains backends, filters, and other software that was
 once part of the core CUPS distribution but is no longer maintained by
@@ -148,6 +155,9 @@ This package provides cupsfilters and fontembed libraries.
 
 %description devel
 This is the development package for OpenPrinting CUPS filters and backends.
+
+%description braille
+The package provides filters and cups-brf backend needed for braille printing.
 
 %prep
 %autosetup -S git
@@ -249,9 +259,6 @@ done
 %{_bindir}/driverless-fax
 %{_sbindir}/cups-browsed
 %attr(0700,root,root) %{_cups_serverbin}/backend/beh
-# cups-brf needs to be run as root, otherwise it leaves error messages
-# in journal
-%attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
 # implicitclass backend must be run as root
 %attr(0700,root,root) %{_cups_serverbin}/backend/implicitclass
 # all backends needs to be run only as root because of kerberos
@@ -261,21 +268,15 @@ done
 %{_cups_serverbin}/backend/driverless
 %{_cups_serverbin}/backend/driverless-fax
 %attr(0755,root,root) %{_cups_serverbin}/filter/bannertopdf
-%attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
-%attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(0755,root,root) %{_cups_serverbin}/filter/commandtopclx
 %attr(0755,root,root) %{_cups_serverbin}/filter/foomatic-rip
 %attr(0755,root,root) %{_cups_serverbin}/filter/gstopdf
 %attr(0755,root,root) %{_cups_serverbin}/filter/gstopxl
 %attr(0755,root,root) %{_cups_serverbin}/filter/gstoraster
-%attr(0755,root,root) %{_cups_serverbin}/filter/imagetobrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/imagetopdf
 %attr(0755,root,root) %{_cups_serverbin}/filter/imagetops
 %attr(0755,root,root) %{_cups_serverbin}/filter/imagetoraster
-%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv3
-%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv4
-%attr(0755,root,root) %{_cups_serverbin}/filter/musicxmltobrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/pdftopdf
 %attr(0755,root,root) %{_cups_serverbin}/filter/pdftops
 %attr(0755,root,root) %{_cups_serverbin}/filter/pdftoraster
@@ -290,47 +291,19 @@ done
 %attr(0755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(0755,root,root) %{_cups_serverbin}/filter/texttops
 %attr(0755,root,root) %{_cups_serverbin}/filter/texttotext
-%attr(0755,root,root) %{_cups_serverbin}/filter/vectortobrf
-%attr(0755,root,root) %{_cups_serverbin}/filter/vectortopdf
-%{_cups_serverbin}/filter/cgmtopdf
-%{_cups_serverbin}/filter/cmxtopdf
-%{_cups_serverbin}/filter/emftopdf
-%{_cups_serverbin}/filter/imagetoubrl
-%{_cups_serverbin}/filter/svgtopdf
-%{_cups_serverbin}/filter/textbrftoindexv4
-%{_cups_serverbin}/filter/vectortoubrl
-%{_cups_serverbin}/filter/wmftopdf
-%{_cups_serverbin}/filter/xfigtopdf
 %{_cups_serverbin}/driver/driverless
 %{_cups_serverbin}/driver/driverless-fax
 %{_datadir}/cups/banners
-%{_datadir}/cups/braille
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
 %{_datadir}/cups/drv/cupsfilters.drv
-%{_datadir}/cups/drv/generic-brf.drv
-%{_datadir}/cups/drv/generic-ubrl.drv
-%{_datadir}/cups/drv/indexv3.drv
-%{_datadir}/cups/drv/indexv4.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/cups/mime/cupsfilters-ghostscript.convs
 %{_datadir}/cups/mime/cupsfilters-poppler.convs
-%{_datadir}/cups/mime/braille.convs
-%{_datadir}/cups/mime/braille.types
 %{_datadir}/ppd/cupsfilters
 # this needs to be in the main package because of cupsfilters.drv
 %{_datadir}/cups/ppdc/pcl.h
-%{_datadir}/cups/ppdc/braille.defs
-%{_datadir}/cups/ppdc/fr-braille.po
-%{_datadir}/cups/ppdc/imagemagick.defs
-%{_datadir}/cups/ppdc/index.defs
-%{_datadir}/cups/ppdc/liblouis.defs
-%{_datadir}/cups/ppdc/liblouis1.defs
-%{_datadir}/cups/ppdc/liblouis2.defs
-%{_datadir}/cups/ppdc/liblouis3.defs
-%{_datadir}/cups/ppdc/liblouis4.defs
-%{_datadir}/cups/ppdc/media-braille.defs
 %{_mandir}/man1/foomatic-rip.1.gz
 %{_mandir}/man1/driverless.1.gz
 %{_mandir}/man5/cups-browsed.conf.5.gz
@@ -355,7 +328,49 @@ done
 %{_libdir}/pkgconfig/libcupsfilters.pc
 %{_libdir}/pkgconfig/libfontembed.pc
 
+%files braille
+# cups-brf needs to be run as root, otherwise it leaves error messages
+# in journal
+%attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
+%attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/imagetobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv3
+%attr(0755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv4
+%attr(0755,root,root) %{_cups_serverbin}/filter/musicxmltobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/vectortobrf
+%attr(0755,root,root) %{_cups_serverbin}/filter/vectortopdf
+%{_cups_serverbin}/filter/cgmtopdf
+%{_cups_serverbin}/filter/cmxtopdf
+%{_cups_serverbin}/filter/emftopdf
+%{_cups_serverbin}/filter/imagetoubrl
+%{_cups_serverbin}/filter/svgtopdf
+%{_cups_serverbin}/filter/textbrftoindexv4
+%{_cups_serverbin}/filter/vectortoubrl
+%{_cups_serverbin}/filter/xfigtopdf
+%{_cups_serverbin}/filter/wmftopdf
+%{_datadir}/cups/braille
+%{_datadir}/cups/drv/generic-brf.drv
+%{_datadir}/cups/drv/generic-ubrl.drv
+%{_datadir}/cups/drv/indexv3.drv
+%{_datadir}/cups/drv/indexv4.drv
+%{_datadir}/cups/ppdc/braille.defs
+%{_datadir}/cups/ppdc/fr-braille.po
+%{_datadir}/cups/ppdc/imagemagick.defs
+%{_datadir}/cups/ppdc/index.defs
+%{_datadir}/cups/ppdc/liblouis.defs
+%{_datadir}/cups/ppdc/liblouis1.defs
+%{_datadir}/cups/ppdc/liblouis2.defs
+%{_datadir}/cups/ppdc/liblouis3.defs
+%{_datadir}/cups/ppdc/liblouis4.defs
+%{_datadir}/cups/ppdc/media-braille.defs
+%{_datadir}/cups/mime/braille.convs
+%{_datadir}/cups/mime/braille.types
+
 %changelog
+* Mon Jan 17 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.10-3
+- 2040973 - Make Braille printing support optional
+
 * Mon Dec 06 2021 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.10-2
 - 1995728 - Enable braille printing
 
