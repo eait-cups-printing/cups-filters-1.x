@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.10
-Release: 4%{?dist}
+Version: 1.28.11
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -134,7 +134,7 @@ Summary: OpenPrinting CUPS filters and backends - braille filters and backend
 License: GPLv2+ and MIT
 BuildRequires: liblouis-devel
 # remove after F36 goes EOL
-Conflicts: cups-filters < 1.28.10-4
+Conflicts: cups-filters < 1.28.11-1
 # we need classic pdftopdf and other filters as well
 Requires: cups-filters%{?_isa} = %{version}-%{release}
 # lou_translate and file2brl are needed for file conversions
@@ -368,6 +368,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Mon Jan 17 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.11-1
+- 1.28.11
+
 * Mon Jan 17 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.10-4
 - fix typo in braille requires
 
