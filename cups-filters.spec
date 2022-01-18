@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.11
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -368,6 +368,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Tue Jan 18 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.11-2
+- raise the NVR to get a new build
+
 * Mon Jan 17 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.11-1
 - 1.28.11
 
