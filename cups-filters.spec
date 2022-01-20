@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.11
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -368,6 +368,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.28.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Tue Jan 18 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.11-2
 - raise the NVR to get a new build
 
