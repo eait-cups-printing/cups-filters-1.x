@@ -3,7 +3,7 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.12
+Version: 1.28.13
 Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
@@ -368,6 +368,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Mon Mar 28 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.13-1
+- 1.28.13
+
 * Tue Mar 08 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.12-1
 - 1.28.12
 
