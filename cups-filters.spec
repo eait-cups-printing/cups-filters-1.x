@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.15
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -308,7 +308,9 @@ done
 %{_mandir}/man1/driverless.1.gz
 %{_mandir}/man5/cups-browsed.conf.5.gz
 %{_mandir}/man8/cups-browsed.8.gz
-%config(noreplace) %{_sysconfdir}/cups/cups-browsed.conf
+# 2123809 - rpm -Va reports changes due %post scriptlet (remove the verify part once we remove
+# cups-browsed.conf update from %post) 
+%config(noreplace) %verify(not size filedigest mtime) %{_sysconfdir}/cups/cups-browsed.conf
 %{_unitdir}/cups-browsed.service
 
 %files libs
@@ -368,6 +370,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Thu Sep 08 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.15-3
+- 2123809 - rpm -Va reports error on /etc/cups/cups-browsed.conf
+
 * Wed Jul 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 1.28.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 
