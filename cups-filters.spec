@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.15
-Release: 3%{?dist}
+Version: 1.28.16
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,6 +21,7 @@ Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups
 Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
 
 # backported from upstream
+Patch0001: browsed-updatenetif.patch
 
 
 # autogen.sh
@@ -62,6 +63,9 @@ BuildRequires: pkgconfig(dbus-1)
 BuildRequires: pkgconfig(fontconfig)
 BuildRequires: pkgconfig(freetype2)
 BuildRequires: pkgconfig(lcms2)
+# used for getting image resolution from images - they have
+# EXIF data in them and library accesses it
+BuildRequires: pkgconfig(libexif)
 BuildRequires: pkgconfig(libpng)
 BuildRequires: pkgconfig(poppler-cpp)
 BuildRequires: pkgconfig(zlib)
@@ -370,6 +374,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Thu Sep 08 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-1
+- 1.28.16
+
 * Thu Sep 08 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.15-3
 - 2123809 - rpm -Va reports error on /etc/cups/cups-browsed.conf
 
