@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -185,6 +185,9 @@ The package provides filters and cups-brf backend needed for braille printing.
 # --enable-pclm - support for pclm language
 # --with-remote-cups-local-queue-naming=RemoteName - name created local queues, which point to
 #                                                    remote CUPS queue, by its name from the server
+# --disable-frequent-netif-update - cups-browsed can update its network interface data after every found printer,
+#                                   which slows down the printer creation - this disables it and leave the network
+#                                   interface update only after notification from NetworkManager
 
 %configure --disable-static \
            --disable-silent-rules \
@@ -195,7 +198,8 @@ The package provides filters and cups-brf backend needed for braille printing.
            --enable-driverless \
            --enable-pclm \
            --with-apple-raster-filter=rastertopdf \
-           --with-remote-cups-local-queue-naming=RemoteName
+           --with-remote-cups-local-queue-naming=RemoteName \
+           --disable-frequent-netif-update
 
 %make_build
 
@@ -374,6 +378,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Wed Sep 21 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-2
+- disable frequent network interface data update, which slows down the queue creation
+
 * Thu Sep 08 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-1
 - 1.28.16
 
