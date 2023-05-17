@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.16
-Release: 2%{?dist}
+Release: 3%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -22,6 +22,7 @@ Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{versio
 
 # backported from upstream
 Patch0001: browsed-updatenetif.patch
+Patch0002: 0001-beh-backend-Use-execv-instead-of-system-CVE-2023-248.patch
 
 
 # autogen.sh
@@ -378,6 +379,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Wed May 17 2023 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-3
+- 2207970 - CVE-2023-24805 cups-filters: remote code execution in cups-filters, beh CUPS backend
+
 * Wed Sep 21 2022 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-2
 - disable frequent network interface data update, which slows down the queue creation
 
