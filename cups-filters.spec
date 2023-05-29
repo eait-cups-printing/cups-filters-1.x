@@ -4,7 +4,7 @@
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
 Version: 1.28.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -33,6 +33,9 @@ Patch0004: cups-filters-require-cxx17.patch
 
 # Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
 Patch0005: cups-filters-acroread-hybrid.patch
+
+# Use shorter NickName with PPD generator that is same format as libppd/cups-filters-2.x's
+Patch0006: cups-filters-shorter-nickname.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -388,6 +391,9 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
+- Use shorter NickName with PPD generator
+
 * Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
 - Update to 1.28.17
 - Use acroread for pdtops filter and fallback to hybrid if no acroread installed
