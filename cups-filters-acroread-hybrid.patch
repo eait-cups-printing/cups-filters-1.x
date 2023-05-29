@@ -1,0 +1,32 @@
+diff -up cups-filters-1.28.17/filter/pdftops.c.acroread cups-filters-1.28.17/filter/pdftops.c
+--- cups-filters-1.28.17/filter/pdftops.c.acroread      2023-01-25 11:41:08 +1000
++++ cups-filters-1.28.17/filter/pdftops.c       2023-03-10 17:37:50 +1000
+@@ -488,6 +488,17 @@ main(int  argc,				/* I - Number of command-line args */
+ 	      "WARNING: Invalid value for \"pdftops-renderer\": \"%s\"\n", val);
+   }
+ 
++ /*
++  * If Acrobat Reader (/usr/bin/acroread) is not installed fallback to hybrid
++  */
++  if (renderer == ACROREAD)
++  {
++    if (access("/usr/bin/acroread", F_OK) != 0) {
++      fprintf(stderr, "DEBUG: Switching to hybrid for pdftops as /usr/bin/acroread is not installed\n");
++      renderer = HYBRID;
++    }
++  }
++
+   if (renderer == HYBRID)
+   {
+     if (make_model[0] &&
+@@ -677,7 +688,9 @@ main(int  argc,				/* I - Number of command-line args */
+   {
+     pdf_argv[0] = (char *)"acroread";
+     pdf_argv[1] = (char *)"-toPostScript";
+-    pdf_argc    = 2;
++    pdf_argv[2] = (char *)"-optimizeForSpeed";
++    pdf_argv[3] = (char *)"-saveVM";
++    pdf_argc    = 4;
+   }
+ 
+  /*

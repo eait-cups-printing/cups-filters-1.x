@@ -1,0 +1,12 @@
+diff -up cups-filters-1.28.17/mime/cupsfilters.convs.in.acrobat cups-filters-1.28.17/mime/cupsfilters.convs.in
+--- cups-filters-1.28.17/mime/cupsfilters.convs.in.acrobat	2023-01-25 11:41:08 +1000
++++ cups-filters-1.28.17/mime/cupsfilters.convs.in	2023-03-10 18:05:45 +1000
+@@ -42,7 +42,7 @@
+ # if it comes from an encrypted PDF file, we simply override pstopdf and the
+ # PDF workflow.
+ 
+-application/vnd.adobe-reader-postscript	application/vnd.cups-postscript	66	pstops
++application/vnd.adobe-reader-postscript	application/vnd.cups-postscript	66	acrobat-pstops
+ 
+ application/pdf		application/vnd.cups-pdf		66	pdftopdf
+ application/x-cshell	application/pdf				32	texttopdf

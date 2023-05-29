@@ -3,8 +3,8 @@
 
 Summary: OpenPrinting CUPS filters and backends
 Name:    cups-filters
-Version: 1.28.16
-Release: 3%{?dist}
+Version: 1.28.17
+Release: 1%{?dist}
 
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -18,12 +18,21 @@ Release: 3%{?dist}
 License: GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT and BSD with advertising
 
 Url:     http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
-Source0: http://www.openprinting.org/download/cups-filters/cups-filters-%{version}.tar.xz
+Source0: https://github.com/OpenPrinting/cups-filters/releases/download/%{version}/cups-filters-%{version}.tar.xz
+
+# acrobat-pstops script which strips DRM that prevents printing
+Source1: acrobat-pstops
 
 # backported from upstream
 Patch0001: browsed-updatenetif.patch
 Patch0002: 0001-beh-backend-Use-execv-instead-of-system-CVE-2023-248.patch
+Patch0003: 0001-auto-generated-pppds-do-not-set-rgb-default-on-mono-printers.patch
 
+# c++17 support is required for building against qpdf >= 11.3.0
+Patch0004: cups-filters-require-cxx17.patch
+
+# Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
+Patch0005: cups-filters-acroread-hybrid.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -138,8 +147,6 @@ Requires: cups-filters-libs%{?_isa} = %{version}-%{release}
 Summary: OpenPrinting CUPS filters and backends - braille filters and backend
 License: GPLv2+ and MIT
 BuildRequires: liblouis-devel
-# remove after F36 goes EOL
-Conflicts: cups-filters < 1.28.11-1
 # we need classic pdftopdf and other filters as well
 Requires: cups-filters%{?_isa} = %{version}-%{release}
 # lou_translate and file2brl are needed for file conversions
@@ -171,14 +178,13 @@ The package provides filters and cups-brf backend needed for braille printing.
 # work-around Rpath
 ./autogen.sh
 
-# --with-pdftops=hybrid - use Poppler's pdftops instead of Ghostscript for
-#                         Brother, Minolta, and Konica Minolta to work around
-#                         bugs in the printer's PS interpreters
+# --with-pdftops=acroread - use Adobe Reader and fallback to hybrid option
+#                           if /usr/bin/acroread not installed
 # --with-rcdir=no - don't install SysV init script
 # --enable-driverless - enable PPD generator for driverless printing in 
 #                       /usr/lib/cups/driver, it is for manual setup of 
 #                       driverless printers with printer setup tool
-# --disable-static - do not build static libraries (becuase of Fedora Packaging
+# --disable-static - do not build static libraries (because of Fedora Packaging
 #                    Guidelines)
 # --enable-dbus - enable DBus Connection Manager's code
 # --disable-silent-rules - verbose build output
@@ -192,7 +198,7 @@ The package provides filters and cups-brf backend needed for braille printing.
 
 %configure --disable-static \
            --disable-silent-rules \
-           --with-pdftops=hybrid \
+           --with-pdftops=acroread \
            --enable-dbus \
            --with-rcdir=no \
            --disable-mutool \
@@ -225,6 +231,8 @@ install -p -m 644 utils/cups-browsed.service %{buildroot}%{_unitdir}
 # create it temporarily as a relative symlink
 ln -sf %{_cups_serverbin}/filter/foomatic-rip %{buildroot}%{_bindir}/foomatic-rip
 
+# acrobat-pstops
+install -p -m 755 %{SOURCE1} %{buildroot}%{_cups_serverbin}/filter/
 
 %check
 make check
@@ -343,6 +351,7 @@ done
 # cups-brf needs to be run as root, otherwise it leaves error messages
 # in journal
 %attr(0700,root,root) %{_cups_serverbin}/backend/cups-brf
+%attr(0755,root,root) %{_cups_serverbin}/filter/acrobat-pstops
 %attr(0755,root,root) %{_cups_serverbin}/filter/brftoembosser
 %attr(0755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
 %attr(0755,root,root) %{_cups_serverbin}/filter/imagetobrf
@@ -379,6 +388,13 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
+* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
+- Update to 1.28.17
+- Use acroread for pdtops filter and fallback to hybrid if no acroread installed
+- C++17 support required for building against qpdf >= 11.3.0
+- Add acrobat-pstops script which removes No Re-Distill DRM from PostScript
+- Apply auto-generated PPDs do not set RGB default on mono printers patch
+
 * Wed May 17 2023 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-3
 - 2207970 - CVE-2023-24805 cups-filters: remote code execution in cups-filters, beh CUPS backend
 

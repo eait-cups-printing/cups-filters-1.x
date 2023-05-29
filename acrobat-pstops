@@ -1,0 +1,36 @@
+#! /usr/bin/perl
+# Removes No Re-Distill DRM from macOS Acrobat generated PostScript
+# which unitentionally prevents printing
+
+use File::Basename;
+
+# Flush everything immediately.
+$|=1;
+
+if (defined $ARGV[5]) {	
+	# choose ARGV[5] as inputfile
+	$inputfile= $ARGV[5];
+} else {
+	# choose STDIN as inputfile
+	$inputfile = "-";
+}
+
+open(INFILE, $inputfile) or die "Can't open file: $inputfile\n";
+
+my $seen_begin_redistill = 0;
+my $seen_end_redistill = 0;
+while (<INFILE>) {
+	if (/^%ADOBeginClientInjection: DocumentSetup Start "No Re-Distill"/) {
+		$seen_begin_redistill = 1;
+	} elsif (/^%ADOEndClientInjection: DocumentSetup Start "No Re-Distill"/) {
+		$seen_end_redistill = 1;
+	}
+
+	if ($seen_begin_redistill && $seen_end_redistill) {
+		$seen_begin_redistill = 0;
+		$seen_end_redistill = 0;
+	} elsif (!$seen_begin_redistill && !$seen_end_redistill) {
+		print $_;
+	}
+}
+
