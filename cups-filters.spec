@@ -27,15 +27,22 @@ Source1: acrobat-pstops
 Patch0001: browsed-updatenetif.patch
 Patch0002: 0001-beh-backend-Use-execv-instead-of-system-CVE-2023-248.patch
 Patch0003: 0001-auto-generated-pppds-do-not-set-rgb-default-on-mono-printers.patch
+Patch0004: 0001-support-more-than-2-apple-raster-resolutions.patch
 
 # c++17 support is required for building against qpdf >= 11.3.0
-Patch0004: cups-filters-require-cxx17.patch
+Patch1000: cups-filters-require-cxx17.patch
 
 # Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
-Patch0005: cups-filters-acroread-hybrid.patch
+Patch1001: cups-filters-acroread-hybrid.patch
 
 # Use shorter NickName with PPD generator that is same format as libppd/cups-filters-2.x's
-Patch0006: cups-filters-shorter-nickname.patch
+Patch1002: cups-filters-shorter-nickname.patch
+
+# Ignore custom Konica Minota media types and those > 40 characters
+Patch1003: cups-filters-ignore-some-media-types.patch
+
+# Add LandscapeOrientation support from libppd
+Patch1004: cups-filters-add-landscape-orientation.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -391,8 +398,10 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
-* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
+* Wed Sep 06 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
 - Use shorter NickName with PPD generator
+- Ignore custom Konica Minota media types and those > 40 characters patch
+- Add LandscapeOrientation support from libppd patch
 
 * Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
 - Update to 1.28.17

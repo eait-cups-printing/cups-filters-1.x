@@ -1,0 +1,16 @@
+diff --git a/cupsfilters/ppdgenerator.c b/cupsfilters/ppdgenerator.c
+index 0d4dd7097..5fb3e3369 100644
+--- a/cupsfilters/ppdgenerator.c
++++ b/cupsfilters/ppdgenerator.c
+@@ -2755,6 +2755,11 @@ ppdCreateFromIPP2(char         *buffer,          /* I - Filename buffer */
+     for (i = 0; i < count; i ++) {
+       keyword = ippGetString(attr, i, NULL);
+ 
++      /* Konica Minolta custom Mediatypes have weird names, so ignore them.
++        macOS ignores MediaTypes > 40 chars , so ignore them also */
++      if (strstr(keyword, "com.konicaminolta") || strlen(keyword) > 40)
++	continue;
++
+       pwg_ppdize_name(keyword, ppdname, sizeof(ppdname));
+ 
+       human_readable = lookup_choice((char *)keyword, "media-type",
