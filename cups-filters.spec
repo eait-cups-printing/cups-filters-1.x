@@ -39,15 +39,6 @@ Patch1001: cups-filters-acroread-hybrid.patch
 # document-password if set
 Patch1002: cups-filters-document-password-job-password-mapping.patch
 
-# Use shorter NickName with PPD generator that is same format as libppd/cups-filters-2.x's
-Patch1003: cups-filters-shorter-nickname.patch
-
-# Ignore custom Konica Minota media types and those > 40 characters
-Patch1004: cups-filters-ignore-some-media-types.patch
-
-# Add LandscapeOrientation support from libppd
-Patch1005: cups-filters-add-landscape-orientation.patch
-
 # autogen.sh
 BuildRequires: autoconf
 BuildRequires: automake
