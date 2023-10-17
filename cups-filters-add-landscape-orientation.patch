@@ -20,10 +20,10 @@ index 0d4dd7097..7886d78ca 100644
 +			       "landscape-orientation-requested-preferred",
 +			       IPP_TAG_ZERO)) != NULL)
 +  {
-+    if (ippGetInteger(attr, 0) == 5)
-+      cupsFilePuts(fp, "*LandscapeOrientation: Minus90\n");
-+    else
++    if (ippGetInteger(attr, 0) == 4)
 +      cupsFilePuts(fp, "*LandscapeOrientation: Plus90\n");
++    else if (ippGetInteger(attr, 0) == 5)
++      cupsFilePuts(fp, "*LandscapeOrientation: Minus90\n");
 +  }
 +
    cupsFilePrintf(fp, "*cupsVersion: %d.%d\n", CUPS_VERSION_MAJOR,
