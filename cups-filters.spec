@@ -35,14 +35,18 @@ Patch1000: cups-filters-require-cxx17.patch
 # Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
 Patch1001: cups-filters-acroread-hybrid.patch
 
+# Map job-password (i.e. PIN) to document-password and encypt PDFs with
+# document-password if set
+Patch1002: cups-filters-document-password-job-password-mapping.patch
+
 # Use shorter NickName with PPD generator that is same format as libppd/cups-filters-2.x's
-Patch1002: cups-filters-shorter-nickname.patch
+Patch1003: cups-filters-shorter-nickname.patch
 
 # Ignore custom Konica Minota media types and those > 40 characters
-Patch1003: cups-filters-ignore-some-media-types.patch
+Patch1004: cups-filters-ignore-some-media-types.patch
 
 # Add LandscapeOrientation support from libppd
-Patch1004: cups-filters-add-landscape-orientation.patch
+Patch1005: cups-filters-add-landscape-orientation.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -398,10 +402,12 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
-* Wed Sep 06 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
+* Wed Oct 17 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
 - Use shorter NickName with PPD generator
 - Ignore custom Konica Minota media types and those > 40 characters patch
 - Add LandscapeOrientation support from libppd patch
+- Encrypt PDF files with document-password or job-password when printer doesn't
+  support job-password
 
 * Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
 - Update to 1.28.17
