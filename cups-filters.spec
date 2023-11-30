@@ -40,7 +40,7 @@ Patch1001: cups-filters-acrobat-drm.patch
 Patch1002: cups-filters-acroread-hybrid.patch
 
 # Enable page-logging with pdftopdf filter for PostScript final content
-Patch1003: cups-filters-postsctipt-page-log.patch
+Patch1003: cups-filters-postscript-page-log.patch
 
 # Abandoned or work in progress patch
 # Map job-password (i.e. PIN) to document-password and encypt PDFs with
