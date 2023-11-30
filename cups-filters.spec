@@ -39,9 +39,13 @@ Patch1001: cups-filters-acrobat-drm.patch
 # Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
 Patch1002: cups-filters-acroread-hybrid.patch
 
+# Enable page-logging with pdftopdf filter for PostScript final content
+Patch1003: cups-filters-postsctipt-page-log.patch
+
+# Abandoned or work in progress patch
 # Map job-password (i.e. PIN) to document-password and encypt PDFs with
 # document-password if set
-Patch1003: cups-filters-document-password-job-password-mapping.patch
+#Patch1100: cups-filters-document-password-job-password-mapping.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -397,15 +401,12 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
-* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
+* Thu Nov 30 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
 - Update to 1.28.17
-- Use shorter NickName with PPD generator
-- Ignore custom Konica Minota media types and those > 40 characters patch
-- Add LandscapeOrientation support from libppd patch
-- Use acroread for pdtops filter and fallback to hybrid if no acroread installed
 - C++17 support required for building against qpdf >= 11.3.0
+- Use acroread for pdtops filter and fallback to hybrid if no acroread installed
+- Enable page-logging for PostScript final content with pdftopdf filter
 - Add acrobat-pstops script which removes No Re-Distill DRM from PostScript
-- Apply auto-generated PPDs do not set RGB default on mono printers patch
 - Encrypt PDF files with document-password or job-password when printer doesn't
   support job-password
 
