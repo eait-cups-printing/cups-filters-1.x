@@ -32,12 +32,16 @@ Patch0004: 0001-support-more-than-2-apple-raster-resolutions.patch
 # c++17 support is required for building against qpdf >= 11.3.0
 Patch1000: cups-filters-require-cxx17.patch
 
+# Strip "No Re-Distill DRM" from macOS Acrobat generated PostScript
+# which unitentionally prevents printing
+Patch1001: cups-filters-acrobat-drm.patch
+
 # Use acroread for pdftops filter and fallback to hybrid if /usr/bin/acroread is not installed
-Patch1001: cups-filters-acroread-hybrid.patch
+Patch1002: cups-filters-acroread-hybrid.patch
 
 # Map job-password (i.e. PIN) to document-password and encypt PDFs with
 # document-password if set
-Patch1002: cups-filters-document-password-job-password-mapping.patch
+Patch1003: cups-filters-document-password-job-password-mapping.patch
 
 # autogen.sh
 BuildRequires: autoconf
@@ -393,19 +397,17 @@ done
 %{_datadir}/cups/mime/braille.types
 
 %changelog
-* Wed Oct 17 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-2
+* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
+- Update to 1.28.17
 - Use shorter NickName with PPD generator
 - Ignore custom Konica Minota media types and those > 40 characters patch
 - Add LandscapeOrientation support from libppd patch
-- Encrypt PDF files with document-password or job-password when printer doesn't
-  support job-password
-
-* Mon May 29 2023 Douglas Kosovic <doug@uq.edu.au> - 1.28.17-1
-- Update to 1.28.17
 - Use acroread for pdtops filter and fallback to hybrid if no acroread installed
 - C++17 support required for building against qpdf >= 11.3.0
 - Add acrobat-pstops script which removes No Re-Distill DRM from PostScript
 - Apply auto-generated PPDs do not set RGB default on mono printers patch
+- Encrypt PDF files with document-password or job-password when printer doesn't
+  support job-password
 
 * Wed May 17 2023 Zdenek Dohnal <zdohnal@redhat.com> - 1.28.16-3
 - 2207970 - CVE-2023-24805 cups-filters: remote code execution in cups-filters, beh CUPS backend
