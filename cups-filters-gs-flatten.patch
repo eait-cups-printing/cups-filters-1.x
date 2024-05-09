@@ -1,0 +1,13 @@
+diff --git a/filter/pdftopdf/pdftopdf.cc b/filter/pdftopdf/pdftopdf.cc
+index 7a684a260..ff9254701 100644
+--- a/filter/pdftopdf/pdftopdf.cc
++++ b/filter/pdftopdf/pdftopdf.cc
+@@ -1194,7 +1194,7 @@ int main(int argc,char **argv)
+     /* If the input file contains a PDF form and we opted for not
+        using QPDF for flattening the form, we pipe the PDF through
+        pdftocairo or Ghostscript here */
+-    if (!qpdf_flatten && proc->hasAcroForm()) {
++    if (!qpdf_flatten && (pdftocairo_flatten || gs_flatten || external_auto_flatten)) {
+       /* Prepare the input file for being read by the form flattening
+ 	 process */
+       FILE *infile = NULL;
