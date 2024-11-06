@@ -210,9 +210,6 @@ The package provides filters and cups-brf backend needed for braille printing.
 # --enable-pclm - support for pclm language
 # --with-remote-cups-local-queue-naming=RemoteName - name created local queues, which point to
 #                                                    remote CUPS queue, by its name from the server
-# --disable-frequent-netif-update - cups-browsed can update its network interface data after every found printer,
-#                                   which slows down the printer creation - this disables it and leave the network
-#                                   interface update only after notification from NetworkManager
 
 %configure --disable-static \
            --disable-silent-rules \
@@ -224,8 +221,7 @@ The package provides filters and cups-brf backend needed for braille printing.
            --enable-pclm \
            --with-apple-raster-filter=rastertopdf \
            --with-browseremoteprotocols=none \
-           --with-remote-cups-local-queue-naming=RemoteName \
-           --disable-frequent-netif-update
+           --with-remote-cups-local-queue-naming=RemoteName
 
 %make_build
 
