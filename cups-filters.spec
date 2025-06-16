@@ -52,6 +52,12 @@ Patch1004: cups-filters-silence-macos-warnings.patch
 # Allow pdftopdf-form-flattening=ghostscript for not just PDF forms
 Patch1005: cups-filters-gs-flatten.patch
 
+# Fix for QPDF 12, replace replaceOrRemoveKey with replaceKey
+Patch1006: cups-filters-qpdf-replaceOrRemoveKey.patch
+
+# Fix for QPDF 12, replace PointerHolder with shared_ptr
+Patch1007: cups-filters-qpdf-PointerHolder.patch
+
 # autogen.sh
 BuildRequires: autoconf
 BuildRequires: automake
