@@ -1,0 +1,65 @@
+From b378f09c9b8aaa8dccb5eb557938b30da874101d Mon Sep 17 00:00:00 2001
+From: Till Kamppeter <till.kamppeter@gmail.com>
+Date: Tue, 7 Jan 2025 18:30:34 +0100
+Subject: [PATCH] cups-browsed: Fix uninitialized make_model in create_queue()
+
+Fixes #598
+
+At 2 points the string buffer for make_model got malloced but not
+initialized by putting a terminating zero to its beginning.
+
+At the same points sizeof() was applied to the pointer to the buffer
+rsulting in a 7-byte limit and strncpy was used which does not put a
+terminating zero when the string copied is too long for the given
+limit (which was always the case). No we use an explicit number for
+the limit and strncat which always zero-terminates.
+
+Thanks, Solar Designer, for describing bug and solution so well in
+your report.
+
+Same as https://github.com/OpenPrinting/cups-browsed/issues/42:
+
+https://github.com/OpenPrinting/cups-browsed/commit/f6bf616b
+---
+ utils/cups-browsed.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/utils/cups-browsed.c b/utils/cups-browsed.c
+index 9136e7a88..6b88a2e66 100644
+--- a/utils/cups-browsed.c
++++ b/utils/cups-browsed.c
+@@ -7199,12 +7199,12 @@ gboolean update_cups_queues(gpointer unused) {
+ 	    sizes = NULL;
+ 	  } else {
+ 	    make_model = (char*)malloc(sizeof(char) * 256);
++	    *make_model = 0; /* Empty string for possibly strncat'ing to */
+ 	    printer_attributes = get_cluster_attributes(p->queue_name);
+ 	    if ((attr = ippFindAttribute(printer_attributes,
+ 					 "printer-make-and-model",
+ 					 IPP_TAG_TEXT)) != NULL)
+-	      strncpy(make_model, ippGetString(attr, 0, NULL),
+-		      sizeof(make_model) - 1);
++	      strncat(make_model, ippGetString(attr, 0, NULL), 255);
+ 	    color = 0;
+ 	    duplex = 0;
+ 	    for (r = (remote_printer_t *)cupsArrayFirst(remote_printers);
+@@ -7538,13 +7538,13 @@ gboolean update_cups_queues(gpointer unused) {
+ 	    duplex = p->duplex;
+ 	    sizes = NULL;
+ 	  } else {
+-	    make_model = (char*)malloc(sizeof(char)*256);
++	    make_model = (char*)malloc(sizeof(char) * 256);
++	    *make_model = 0; /* Empty string for possibly strncat'ing to */
+ 	    printer_attributes = get_cluster_attributes(p->queue_name);
+-	    if((attr = ippFindAttribute(printer_attributes,
+-					"printer-make-and-model",
+-					IPP_TAG_TEXT)) != NULL)
+-	      strncpy(make_model, ippGetString(attr, 0, NULL),
+-		      sizeof(make_model) - 1);
++	    if ((attr = ippFindAttribute(printer_attributes,
++					 "printer-make-and-model",
++					 IPP_TAG_TEXT)) != NULL)
++	      strncat(make_model, ippGetString(attr, 0, NULL), 255);
+ 	    color = 0;
+ 	    duplex = 0;
+ 	    for (r = (remote_printer_t *)cupsArrayFirst(remote_printers);

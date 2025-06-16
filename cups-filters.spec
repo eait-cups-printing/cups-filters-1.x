@@ -32,6 +32,9 @@ Patch0005: 0001-CVE-2024-47076.patch
 Patch0006: 0001-pdftopdf-add-newline-to-avoid-mangling.patch
 Patch0007: 0001-remove-legacy-browsing-and-ldap.patch
 Patch0008: 0001-c++17-onwards-noexcept-fix.patch
+Patch0009: 0001-correct-skipping-pages-manual-duplex.patch
+Patch0010: 0001-cups-browsed-uninitialized-make_model.patch
+Patch0011: 0001-mono-antialias-poppler.patch
 
 # c++17 support is required for building against qpdf >= 11.3.0
 Patch1000: cups-filters-require-cxx17.patch

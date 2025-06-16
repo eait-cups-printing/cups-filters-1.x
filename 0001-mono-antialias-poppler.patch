@@ -1,0 +1,59 @@
+diff --git a/filter/imagetoraster.c b/filter/imagetoraster.c
+index fcc6cb1ef..d29bf92ca 100644
+--- a/filter/imagetoraster.c
++++ b/filter/imagetoraster.c
+@@ -2513,8 +2513,9 @@ format_K(cups_page_header2_t *header,	/* I - Page header */
+ 
+         for (x = xsize; x > 0; x --)
+         {
+-          if (*r0++ > dither[x & 15])
+-            *ptr ^= bitmask;
++	  if (*r0 > dither[x & 15] || *r0 == 0xff)
++	    *ptr ^= bitmask;
++	  r0++;
+ 
+           if (bitmask > 1)
+ 	    bitmask >>= 1;
+@@ -3632,8 +3633,9 @@ format_W(cups_page_header2_t *header,	/* I - Page header */
+ 
+         for (x = xsize; x > 0; x --)
+         {
+-          if (*r0++ > dither[x & 15])
+-            *ptr ^= bitmask;
++	  if (*r0 > dither[x & 15] || *r0 == 0xff)
++	    *ptr ^= bitmask;
++	  r0++;
+ 
+           if (bitmask > 1)
+ 	    bitmask >>= 1;
+diff --git a/filter/pdftoraster.cxx b/filter/pdftoraster.cxx
+index e91e22459..1bdde0b1d 100755
+--- a/filter/pdftoraster.cxx
++++ b/filter/pdftoraster.cxx
+@@ -1523,9 +1523,9 @@ static unsigned char *onebitpixel(unsigned char *src, unsigned char *dst, unsign
+         cnt++;
+           tem <<=1;
+           unsigned int var=*src;
+-          if(var > dither1[i & 0xf][(j+k) & 0xf]){
+-            tem |= 0x1;
+-          }
++	  if(var > dither1[i & 0xf][(j+k) & 0xf] || var == 0xff){
++	    tem |= 0x1;
++	  }
+           src +=1;
+       }
+       *dst=tem;
+@@ -1562,7 +1562,12 @@ static void writePageImage(cups_raster_t *raster, poppler::document *doc,
+   poppler::page *current_page =doc->create_page(pageNo-1);
+   poppler::page_renderer pr;
+   pr.set_render_hint(poppler::page_renderer::antialiasing, true);
+-  pr.set_render_hint(poppler::page_renderer::text_antialiasing, true);
++  pr.set_render_hint(poppler::page_renderer::text_hinting, true);
++  // text anti-aliasing for 1-bit color produces jagged text
++  if (header.cupsBitsPerColor!=1)
++    pr.set_render_hint(poppler::page_renderer::text_antialiasing, true);
++  else
++    pr.set_render_hint(poppler::page_renderer::text_antialiasing, false);
+ 
+   unsigned char *colordata,*newdata,*graydata,*onebitdata;
+   unsigned int pixel_count;

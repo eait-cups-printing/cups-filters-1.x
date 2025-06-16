@@ -1,0 +1,137 @@
+From 3534e01cb41ddfa61ac78d32052b8822df71d97d Mon Sep 17 00:00:00 2001
+From: Till Kamppeter <till.kamppeter@gmail.com>
+Date: Sat, 4 Jan 2025 01:19:57 +0100
+Subject: [PATCH] Correct skipping even/odd pages for manual duplex Fixes #541
+
+The page-set option with choicers "even" and "odd" is designed for
+doing manual duplex, by printing the odd pages first, turning the
+printed pages over and put them back into the input tray and then
+print the even pages.
+
+If the total number of pages to be printed is odd, an empty page needs
+to be added to the end of the set of even pages to make the total
+number of pages even, to have a front and back for each sheet and so
+the correct pairs of pages are on each sheet and always all sheets are
+taken from the input tray to the output tray.
+
+This did not work correctly for 2 reasons:
+
+- The skipping of pages for the page-set and for the page-ranges
+  options were done in the same step, the page ranges must be done
+  first and from the resulting pages the even or odd pages need to get
+  skipped.
+
+- To determine whether the total amount of pages to be printed is odd,
+  only the actually printed pages, with the even or odd pages already
+  skipped, ar counted, not the pages which would be printed if
+  page-set is not used. This means especially that a 6-page document
+  would have 3 even pages, so in the end 3 pages are counted and so an
+  extra blank page is added (which is wrong as the document has 6
+  pages which is even). A 5-page document has 2 even pages, so an even
+  number of pages gets counted and so no blank page gets added.
+
+Now we apply page-ranges and each page which gets printed according to
+that we count with the outputno variable. Then we skip the pages with
+even or odd outputno depending of the page-set option. In the end,
+output no is the number of all pages to be printed and so we know that
+if it is odd and we print the even pages, we need to add a blank page.
+
+Backport of https://github.com/OpenPrinting/libcupsfilters/commit/0d98684e62
+---
+ filter/pdftopdf/pdftopdf_processor.cc | 48 ++++++++++++++++-----------
+ filter/pdftopdf/pdftopdf_processor.h  |  1 +
+ 2 files changed, 30 insertions(+), 19 deletions(-)
+
+diff --git a/filter/pdftopdf/pdftopdf_processor.cc b/filter/pdftopdf/pdftopdf_processor.cc
+index 9edb7fa08..d3928ee10 100644
+--- a/filter/pdftopdf/pdftopdf_processor.cc
++++ b/filter/pdftopdf/pdftopdf_processor.cc
+@@ -15,7 +15,7 @@ void BookletMode_dump(BookletMode bkm) // {{{
+ }
+ // }}}
+ 
+-bool ProcessingParameters::withPage(int outno) const // {{{
++bool ProcessingParameters::evenOddPage(int outno) const // {{{
+ {
+   if (outno%2 == 0) { // 1-based
+     if (!evenPages) {
+@@ -24,6 +24,12 @@ bool ProcessingParameters::withPage(int outno) const // {{{
+   } else if (!oddPages) {
+     return false;
+   }
++  return (true);
++}
++// }}}
++
++bool ProcessingParameters::withPage(int outno) const // {{{
++{
+   return pageRange.contains(outno);
+ }
+ // }}}
+@@ -334,16 +340,18 @@ bool processPDFTOPDF(PDFTOPDF_Processor &proc,ProcessingParameters &param) // {{
+     bool newPage=nupstate.nextPage(rect.width,rect.height,pgedit);
+     if (newPage) {
+       if ((curpage)&&(param.withPage(outputpage))) {
+-	curpage->rotate(param.orientation);
+-	if (param.mirror)
+-	  curpage->mirror();
+-	// TODO? update rect? --- not needed any more
+-	proc.add_page(curpage,param.reverse); // reverse -> insert at beginning
+-	// Log page in /var/log/cups/page_log
+-	outputno++;
+-	if (param.page_logging == 1)
+-	  fprintf(stderr, "PAGE: %d %d\n", outputno,
+-		  param.copies_to_be_logged);
++	outputno ++;
++	if (param.evenOddPage(outputno)) {
++	  curpage->rotate(param.orientation);
++	  if (param.mirror)
++	    curpage->mirror();
++	  // TODO? update rect? --- not needed any more
++	  proc.add_page(curpage,param.reverse); // reverse -> insert at beginning
++	  // Log page in /var/log/cups/page_log
++	  if (param.page_logging == 1)
++	    fprintf(stderr, "PAGE: %d %d\n", outputno,
++		    param.copies_to_be_logged);
++	}
+       }
+       curpage=proc.new_page(param.page.width,param.page.height);
+       outputpage++;
+@@ -398,15 +406,17 @@ bool processPDFTOPDF(PDFTOPDF_Processor &proc,ProcessingParameters &param) // {{
+     // pgedit.dump();
+   }
+   if ((curpage)&&(param.withPage(outputpage))) {
+-    curpage->rotate(param.orientation);
+-    if (param.mirror) {
+-      curpage->mirror();
+-    }
+-    proc.add_page(curpage,param.reverse); // reverse -> insert at beginning
+-    // Log page in /var/log/cups/page_log
+     outputno ++;
+-    if (param.page_logging == 1)
+-      fprintf(stderr, "PAGE: %d %d\n", outputno, param.copies_to_be_logged);
++    if (param.evenOddPage(outputno)) {
++      curpage->rotate(param.orientation);
++      if (param.mirror) {
++	curpage->mirror();
++      }
++      proc.add_page(curpage,param.reverse); // reverse -> insert at beginning
++      // Log page in /var/log/cups/page_log
++      if (param.page_logging == 1)
++	fprintf(stderr, "PAGE: %d %d\n", outputno, param.copies_to_be_logged);
++    }
+   }
+ 
+   if ((param.evenDuplex || !param.oddPages) && (outputno & 1)) {
+diff --git a/filter/pdftopdf/pdftopdf_processor.h b/filter/pdftopdf/pdftopdf_processor.h
+index 3d64d1a4e..4ba64f7db 100644
+--- a/filter/pdftopdf/pdftopdf_processor.h
++++ b/filter/pdftopdf/pdftopdf_processor.h
+@@ -102,6 +102,7 @@ ProcessingParameters()
+   int copies_to_be_logged;
+ 
+   // helper functions
++  bool evenOddPage(int outno) const; // 1 based
+   bool withPage(int outno) const; // 1 based
+   void dump() const;
+ };
